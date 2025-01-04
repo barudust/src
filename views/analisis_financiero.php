@@ -28,19 +28,17 @@ if ($result->num_rows > 0) {
 // Cerrar la conexión
 $conn->close();
 ?>
-
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es"> 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Inicio - Repaso de Cuentas</title>
+    <title>Análisis Financiero</title>
     <link rel="stylesheet" href="../css/bootstrap.min.css">
     <link href="../css/styles.css" rel="stylesheet" />
     <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
 </head>
 <body class="sb-nav-fixed">
-    
 <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
     <!-- Navbar Brand-->
     <a class="navbar-brand ps-3" href="index.php">Repaso de Cuentas</a>
@@ -61,11 +59,12 @@ $conn->close();
     </ul>
 </nav>
     
-    <div id="layoutSidenav">
-        <div id="layoutSidenav_nav">
-            <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
-                <div class="sb-sidenav-menu">
-                    <div class="nav">
+        <div id="layoutSidenav">
+            <div id="layoutSidenav_nav">
+                <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
+                    <div class="sb-sidenav-menu">
+                        <div class="nav">
+                            
                         <a class="nav-link" href="index.php">
                             <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
                             Inicio
@@ -106,44 +105,22 @@ $conn->close();
                             <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
                             Educacion Financiera
                         </a>   
-                    </div>
-                </div>
-                
-            </nav>
-        </div>
-
-        <div id="layoutSidenav_content">
-            <main>
-                <div class="container-fluid px-4">
-                    <section id="bienvenida">
-                        <h2>Bienvenido a Repaso de Cuentas</h2>
-                        <p>Tu herramienta integral para gestionar tus finanzas personales de manera efectiva y accesible.</p>
-                    </section>
-            
-                    <section id="carrusel">
-                        <h2>Imágenes Representativas</h2>
-                        <div class="carousel">
-                            <img src="../assets/images/finanzas1.jpg" alt="Finanzas Personales" class="carousel-image">
-                            <img src="../assets/images/finanzas2.jpg" alt="Ahorro" class="carousel-image">
-                            <img src="../assets/images/finanzas3.jpg" alt="Inversiones" class="carousel-image">
                         </div>
-                    </section>
-            
-                    <section id="informacion-adicional">
-                        <h2>¿Qué Ofrecemos?</h2>
-                        <p>Nuestra aplicación te permite:</p>
-                        <ul>
-                            <li>Gestionar tus ingresos y gastos.</li>
-                            <li>Realizar un seguimiento de tus inversiones.</li>
-                            <li>Controlar tus deudas y adeudos.</li>
-                            <li>Establecer presupuestos personalizados.</li>
-                            <li>Acceder a recursos educativos sobre finanzas.</li>
-                        </ul>
-                    </section>
+                    </div>
+                    
+                </nav>
+            </div>
 
-                </div>
-            </main>
-            <footer class="py-4 bg-light mt-auto">
+            <div id="layoutSidenav_content">
+                <main>
+                    <div class="container-fluid px-4">
+                        <h1>Análisis Financiero</h1>
+
+                        <button onclick="obtenerAnalisisFinanciero()">Ver Análisis Financiero</button>
+                        <ul id="lista-movimientos"></ul>
+                    </div>
+                </main>
+                <footer class="py-4 bg-light mt-auto">
                 <div class="container-fluid px-4">
                     <div class="d-flex align-items-center justify-content-between small">
                         <div class="text-muted"> &copy; 2024 Repaso de Cuentas. Todos los derechos reservados.</div>
@@ -151,11 +128,11 @@ $conn->close();
                     </div>
                 </div>
             </footer>
-        </div>
-    </div>    
-
-    <script src="../js/bootstrap.bundle.min.js"></script>
+            </div>
+        </div>    
+    
+        <script src="../js/bootstrap.bundle.min.js"></script>
     <script src="../js/scripts.js"></script>
+    <script src="../controllers/financialAnalysisController.js"></script> <!-- Lógica JS -->
 </body>
-
 </html>

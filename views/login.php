@@ -1,47 +1,51 @@
 <?php
 session_start(); // Inicia la sesión para manejar la autenticación
 
+// Verifica si la sesión ya está iniciada, si es así, redirige al usuario al index
+if (isset($_SESSION['email'])) {
+    header("Location: index.php");
+    exit();
+}
+
+// Incluye el archivo de conexión a la base de datos
+include('conexion.php');
+
 // Verifica si el formulario ha sido enviado
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Obtén los datos del formulario
     $email = $_POST['email'];
     $password = $_POST['password'];
 
-    // Aquí puedes conectar a tu base de datos
-    $servername = "localhost";
-    $username = "root"; // Tu usuario de base de datos
-    $password_db = ""; // Tu contraseña de base de datos
-    $dbname = "financiamiento"; // Tu base de datos
-
-    // Crea una conexión con la base de datos
-    $conn = new mysqli($servername, $username, $password_db, $dbname);
-
-    // Verifica si la conexión fue exitosa
-    if ($conn->connect_error) {
-        die("Conexión fallida: " . $conn->connect_error);
-    }
-
     // Consulta SQL para verificar si las credenciales son correctas
-    $sql = "SELECT * FROM usuarios WHERE email = '$email' AND contraseña = '$password'";
+    $sql = "SELECT * FROM usuarios WHERE email = ? AND contraseña = ?";
 
-    // Ejecuta la consulta y guarda el resultado
-    $result = $conn->query($sql);
+    // Prepara la consulta
+    if ($stmt = $conn->prepare($sql)) {
+        // Vincula los parámetros
+        $stmt->bind_param("ss", $email, $password);
+        
+        // Ejecuta la consulta
+        $stmt->execute();
+        
+        // Obtiene el resultado
+        $result = $stmt->get_result();
 
-    // Verifica si la consulta fue exitosa
-    if ($result === false) {
-        // Si la consulta falló, muestra el error SQL
-        echo "Error en la consulta: " . $conn->error;
-    } else {
-        // Si la consulta fue exitosa, verifica el número de filas
+        // Verifica si la consulta fue exitosa
         if ($result->num_rows > 0) {
-            // Si las credenciales son correctas, redirige a index.php
-            $_SESSION['email'] = $email; // Guarda la sesión
+            // Si las credenciales son correctas, guarda la sesión y redirige a index.php
+            $_SESSION['email'] = $email;
             header("Location: index.php");
-            exit(); // Detiene la ejecución después de la redirección
+            exit();
         } else {
             // Si las credenciales no son correctas, muestra un mensaje de error
             echo "<script>alert('Credenciales incorrectas');</script>";
         }
+
+        // Cierra la declaración
+        $stmt->close();
+    } else {
+        // Si la consulta no se pudo preparar, muestra un error
+        echo "Error al preparar la consulta: " . $conn->error;
     }
 
     // Cierra la conexión
@@ -98,12 +102,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <footer class="py-4 bg-light mt-auto">
                 <div class="container-fluid px-4">
                     <div class="d-flex align-items-center justify-content-between small">
-                        <div class="text-muted">Copyright &copy; Your Website 2023</div>
-                        <div>
-                            <a href="#">Privacy Policy</a>
-                            &middot;
-                            <a href="#">Terms &amp; Conditions</a>
-                        </div>
+                        <div class="text-muted"> &copy; 2024 Repaso de Cuentas. Todos los derechos reservados.</div>
                     </div>
                 </div>
             </footer>

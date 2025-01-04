@@ -32,9 +32,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         // Verifica si la consulta fue exitosa
         if ($result->num_rows > 0) {
-            // Si las credenciales son correctas, guarda la sesión y redirige a index.php
+            // Obtiene los datos del usuario
+            $usuario = $result->fetch_assoc();
+            
+            // Guarda la sesión con el correo
             $_SESSION['email'] = $email;
-            header("Location: index.php");
+
+            // Verifica el rol del usuario
+            if ($usuario['rol'] == 'Administrador') {
+                // Redirige a la página de administración si es administrador
+                header("Location: admin/index.php");
+            } else {
+                // Redirige al usuario normal al index
+                header("Location: index.php");
+            }
             exit();
         } else {
             // Si las credenciales no son correctas, muestra un mensaje de error
@@ -52,6 +63,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $conn->close();
 }
 ?>
+
 
 <!DOCTYPE html>
 <html lang="es">
@@ -90,7 +102,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                     </form>
                                 </div>
                                 <div class="card-footer text-center py-3">
-                                    <div class="small"><a href="registro.html">¿Necesitas una cuenta?</a></div>
+                                    <div class="small"><a href="registro.php">¿Necesitas una cuenta?</a></div>
                                 </div>
                             </div>
                         </div>

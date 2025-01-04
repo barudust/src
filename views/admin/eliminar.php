@@ -1,28 +1,23 @@
 <?php
-if (isset($_GET['id'])) {
-    $idEliminar = $_GET['id'];
+include('../conexion.php');
 
-    // Conexión a la base de datos
-    include('../conexion.php');
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['id_usuario'])) {
+    $id_usuario = $_POST['id_usuario'];
 
-    // Consulta para eliminar el usuario
-    $sqlEliminar = "DELETE FROM usuarios WHERE id_usuario = ?";
-    $stmt = $conn->prepare($sqlEliminar);
-    $stmt->bind_param("i", $idEliminar);
+    // Preparar la consulta para eliminar el usuario
+    $sql = "DELETE FROM usuarios WHERE id_usuario = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("i", $id_usuario);
 
     // Ejecutar la consulta
     if ($stmt->execute()) {
-        // Redirige de vuelta a la página anterior
+        // Redirigir después de eliminar
         header("Location: index.php");
         exit();
+    } else {
+        echo "Error al eliminar el usuario.";
     }
-
-    // Cierra la conexión
-    $stmt->close();
-    $conn->close();
 } else {
-    // Si no hay ID proporcionado, redirige al index.php
-    header("Location: index.php");
-    exit();
+    echo "ID de usuario no recibido.";
 }
 ?>

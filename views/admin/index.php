@@ -22,14 +22,18 @@ if ($result->num_rows > 0) {
 
 // Manejar búsqueda
 $busqueda = isset($_GET['busqueda']) ? $conn->real_escape_string($_GET['busqueda']) : '';
-$sqlUsuarios = "SELECT id_usuario, nombre, email, rol FROM usuarios";
+$sqlUsuarios = "SELECT id_usuario, nombre, email, rol FROM usuarios WHERE email != '$email'";
 
 // Si hay un término de búsqueda, añadir cláusula WHERE
 if (!empty($busqueda)) {
-    $sqlUsuarios .= " WHERE nombre LIKE '%$busqueda%'";
+    $sqlUsuarios .= " AND nombre LIKE '%$busqueda%'";
 }
 
+
 $resultUsuarios = $conn->query($sqlUsuarios);
+
+include('modales/ventana.php'); 
+
 ?>
 
 <!DOCTYPE html>
@@ -125,8 +129,8 @@ $resultUsuarios = $conn->query($sqlUsuarios);
                                     echo "<td>
                                             <a href='ver.php?id=" . $usuario['id_usuario'] . "' class='btn btn-sm btn-primary'><i class='fas fa-user'></i> Ver perfil</a>
                                             <a href='editar_usuario2.php?id=" . $usuario['id_usuario'] . "' class='btn btn-sm btn-warning'><i class='fas fa-edit'></i> Editar</a>
-                                            <a href='eliminar.php?id=" . $usuario['id_usuario'] . "' class='btn btn-sm btn-danger'><i class='fas fa-trash'></i> Eliminar</a>
-                                          </td>";
+                                            <a href='#' class='btn btn-sm btn-danger' data-bs-toggle='modal' data-bs-target='#modalEliminar' data-id='" . $usuario['id_usuario'] . "'><i class='fas fa-trash'></i> Eliminar</a>
+                                        </td>";
                                     echo "</tr>";
                                 }
                             } else {
@@ -134,6 +138,9 @@ $resultUsuarios = $conn->query($sqlUsuarios);
                             }
                             ?>
                         </tbody>
+
+
+
                     </table>
                 </div>
             </div>
@@ -148,6 +155,18 @@ $resultUsuarios = $conn->query($sqlUsuarios);
         </footer>
     </div>
 </div>
+
+<script>
+    const eliminarBtn = document.querySelectorAll('[data-bs-toggle="modal"]');
+        eliminarBtn.forEach(btn => {
+            btn.addEventListener('click', function () {
+                const userId = this.getAttribute('data-id');
+                document.getElementById('eliminarUsuario').setAttribute('href', 'eliminar.php?id=' + userId);
+            });
+        });
+
+</script>
+
 
 <script src="../../js/bootstrap.bundle.min.js"></script>
 <script src="../../js/scripts.js"></script>

@@ -1,0 +1,51 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    color: #333;
+    margin: 0;
+    padding: 0;
+}
+
+header {
+    background-color: #007BFF; /* Color azul brillante */
+    padding: 15px;
+    text-align: center;
+}
+
+.container {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 20px;
+}
+
+.feature {
+    margin-bottom: 20px;
+    padding: 15px;
+    background-color: #fff; /* Fondo blanco para las secciones */
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.feature h2 {
+    color: #0056b3; /* Un tono más oscuro de azul */
+}
+
+button {
+    background-color: #007BFF; /* Color azul brillante */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 15px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.3s; /* Transiciones suaves */
+}
+
+button:hover {
+    background-color: #0056b3; /* Fondo azul oscuro al pasar el mouse */
+    transform: scale(1.05); /* Efecto de aumento al pasar el mouse */
+}
+
+footer {
+    text-align: center;
+    margin-top: 20px;
+}

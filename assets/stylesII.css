@@ -1,0 +1,62 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    color: #333;
+    margin: 0;
+    padding: 0;
+}
+
+header {
+    background-color: #007BFF; /* Color azul brillante */
+    padding: 15px;
+}
+
+.header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.auth-buttons button {
+    background-color: #fff; /* Botones blancos */
+    color: #007BFF; /* Texto azul */
+    border: 2px solid #007BFF; /* Borde azul */
+    border-radius: 5px;
+    padding: 10px 15px;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s; /* Transiciones suaves */
+}
+
+.auth-buttons button:hover {
+    background-color: #0056b3; /* Fondo azul oscuro al pasar el mouse */
+    color: white; /* Texto blanco al pasar el mouse */
+}
+
+.container {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 20px;
+}
+
+.feature {
+    margin-bottom: 20px;
+    padding: 15px;
+    background-color: #fff; /* Fondo blanco para las secciones */
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.feature h2 {
+    color: #0056b3; /* Un tono más oscuro de azul */
+}
+
+.feature-image {
+    width: 100%; /* Imagen responsiva */
+    height: auto;
+    border-radius: 8px; /* Bordes redondeados para las imágenes */
+}
+
+footer {
+    text-align: center;
+    margin-top: 20px;
+}

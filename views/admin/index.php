@@ -123,10 +123,10 @@ $resultUsuarios = $conn->query($sqlUsuarios);
                                     echo "<td>" . $usuario['email'] . "</td>";
                                     echo "<td>" . $usuario['rol'] . "</td>";
                                     echo "<td>
-                                            <button class='btn btn-sm btn-primary'><i class='fas fa-user'></i> Ver perfil</button>
-                                            <button class='btn btn-sm btn-warning'><i class='fas fa-edit'></i> Editar</button>
-                                             <a href='eliminar.php?id=" . $usuario['id_usuario'] . "' class='btn btn-sm btn-danger'><i class='fas fa-trash'></i> Eliminar</a>
-                                             </td>";
+                                            <a href='ver.php?id=" . $usuario['id_usuario'] . "' class='btn btn-sm btn-primary'><i class='fas fa-user'></i> Ver perfil</a>
+                                            <a href='editar_usuario2.php?id=" . $usuario['id_usuario'] . "' class='btn btn-sm btn-warning'><i class='fas fa-edit'></i> Editar</a>
+                                            <a href='eliminar.php?id=" . $usuario['id_usuario'] . "' class='btn btn-sm btn-danger'><i class='fas fa-trash'></i> Eliminar</a>
+                                          </td>";
                                     echo "</tr>";
                                 }
                             } else {

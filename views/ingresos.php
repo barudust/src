@@ -113,41 +113,80 @@ $conn->close();
 
 
         <div id="layoutSidenav_content">
-            <main>
-                <div class="container-fluid px-4">
-                    <h1>Gestión de Ingresos</h1>
+        <main>
+        
+            <div class="container-fluid px-4">
+                <h1 class="my-4 text-center">Gestión de Ingresos</h1>
 
-                    <div id="registro-ingreso">
-                        <h2>Registrar Ingreso</h2>
-                        <input type="text" id="descripcion-ingreso" placeholder="Descripción del ingreso">
-                        <input type="number" id="monto-ingreso" placeholder="Monto del ingreso">
-                        <button onclick="registrarIngreso()">Registrar Ingreso</button>
-                        <p id="mensaje-registro-ingreso"></p>
-                    </div>
-
-                    <div id="modificar-ingreso">
-                        <h2>Modificar Ingreso</h2>
-                        <input type="number" id="id-modificar-ingreso" placeholder="ID del ingreso">
-                        <input type="text" id="nuevo-descripcion-ingreso" placeholder="Nueva descripción">
-                        <input type="number" id="nuevo-monto-ingreso" placeholder="Nuevo monto">
-                        <button onclick="modificarIngreso()">Modificar Ingreso</button>
-                        <p id="mensaje-modificacion-ingreso"></p>
-                    </div>
-
-                    <div id="eliminar-ingreso">
-                        <h2>Eliminar Ingreso</h2>
-                        <input type="number" id="id-eliminar-ingreso" placeholder="ID del ingreso a eliminar">
-                        <button onclick="eliminarIngreso()">Eliminar Ingreso</button>
-                        <p id="mensaje-eliminacion-ingreso"></p>
-                    </div>
-
-                    <div id="visualizar-ingresos">
-                        <h2>Visualizar Ingresos</h2>
-                        <button onclick="visualizarIngresos()">Ver Ingresos</button>
-                        <ul id="lista-ingresos"></ul>
-                    </div>
+                <!-- Registrar Ingreso -->
+                <div id="registro-ingreso" class="mb-4">
+                    <h2 class="h4 mb-3">Registrar Ingreso</h2>
+                    <form id="form-registro-ingreso">
+                        <div class="mb-3">
+                            <label for="descripcion-ingreso" class="form-label">Descripción del Ingreso</label>
+                            <input type="text" class="form-control" id="descripcion-ingreso" placeholder="Descripción del ingreso" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="monto-ingreso" class="form-label">Monto del Ingreso</label>
+                            <input type="number" class="form-control" id="monto-ingreso" placeholder="Monto del ingreso" required>
+                        </div>
+                        <button type="button" class="btn btn-primary">
+                            <i class="fas fa-plus-circle"></i> Registrar Ingreso
+                        </button>
+                    </form>
+                    <p id="mensaje-registro-ingreso" class="mt-2"></p>
                 </div>
-            </main>
+
+                <!-- Modificar Ingreso -->
+                <div id="modificar-ingreso" class="mb-4">
+                    <h2 class="h4 mb-3">Modificar Ingreso</h2>
+                    <form id="form-modificar-ingreso">
+                        <div class="mb-3">
+                            <label for="id-modificar-ingreso" class="form-label">ID del Ingreso</label>
+                            <input type="number" class="form-control" id="id-modificar-ingreso" placeholder="ID del ingreso" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="nuevo-descripcion-ingreso" class="form-label">Nueva Descripción</label>
+                            <input type="text" class="form-control" id="nuevo-descripcion-ingreso" placeholder="Nueva descripción" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="nuevo-monto-ingreso" class="form-label">Nuevo Monto</label>
+                            <input type="number" class="form-control" id="nuevo-monto-ingreso" placeholder="Nuevo monto" required>
+                        </div>
+                        <button type="button" class="btn btn-warning">
+                            <i class="fas fa-edit"></i> Modificar Ingreso
+                        </button>
+                    </form>
+                    <p id="mensaje-modificacion-ingreso" class="mt-2"></p>
+                </div>
+
+                <!-- Eliminar Ingreso -->
+                <div id="eliminar-ingreso" class="mb-4">
+                    <h2 class="h4 mb-3">Eliminar Ingreso</h2>
+                    <form id="form-eliminar-ingreso">
+                        <div class="mb-3">
+                            <label for="id-eliminar-ingreso" class="form-label">ID del Ingreso a Eliminar</label>
+                            <input type="number" class="form-control" id="id-eliminar-ingreso" placeholder="ID del ingreso" required>
+                        </div>
+                        <button type="button" class="btn btn-danger">
+                            <i class="fas fa-trash-alt"></i> Eliminar Ingreso
+                        </button>
+                    </form>
+                    <p id="mensaje-eliminacion-ingreso" class="mt-2"></p>
+                </div>
+
+                <!-- Visualizar Ingresos -->
+                <div id="visualizar-ingresos" class="mb-4">
+                    <h2 class="h4 mb-3">Visualizar Ingresos</h2>
+                    <button type="button" class="btn btn-info">
+                        <i class="fas fa-eye"></i> Ver Ingresos
+                    </button>
+                    <ul id="lista-ingresos" class="mt-3 list-group"></ul>
+                </div>
+            </div>
+        </main>
+
+
             <footer class="py-4 bg-light mt-auto">
                 <div class="container-fluid px-4">
                     <div class="d-flex align-items-center justify-content-between small">

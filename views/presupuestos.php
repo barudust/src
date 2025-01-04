@@ -112,41 +112,78 @@ $conn->close();
         </div>
 
         <div id="layoutSidenav_content">
-            <main>
-                <div class="container-fluid px-4">
-                    <h1>Gestión de Presupuestos</h1>
+        <main>
+            <div class="container-fluid px-4">
+                <h1 class="my-4 text-center">Gestión de Presupuestos</h1>
 
-                    <div id="registro-presupuesto">
-                        <h2>Registrar Presupuesto</h2>
-                        <input type="text" id="descripcion-presupuesto" placeholder="Descripción del presupuesto">
-                        <input type="number" id="monto-presupuesto" placeholder="Monto del presupuesto">
-                        <button onclick="registrarPresupuesto()">Registrar Presupuesto</button>
-                        <p id="mensaje-registro-presupuesto"></p>
-                    </div>
-
-                    <div id="modificar-presupuesto">
-                        <h2>Modificar Presupuesto</h2>
-                        <input type="number" id="id-modificar-presupuesto" placeholder="ID del presupuesto">
-                        <input type="text" id="nuevo-descripcion-presupuesto" placeholder="Nueva descripción">
-                        <input type="number" id="nuevo-monto-presupuesto" placeholder="Nuevo monto">
-                        <button onclick="modificarPresupuesto()">Modificar Presupuesto</button>
-                        <p id="mensaje-modificacion-presupuesto"></p>
-                    </div>
-
-                    <div id="eliminar-presupuesto">
-                        <h2>Eliminar Presupuesto</h2>
-                        <input type="number" id="id-eliminar-presupuesto" placeholder="ID del presupuesto a eliminar">
-                        <button onclick="eliminarPresupuesto()">Eliminar Presupuesto</button>
-                        <p id="mensaje-eliminacion-presupuesto"></p>
-                    </div>
-
-                    <div id="visualizar-presupuestos">
-                        <h2>Visualizar Presupuestos</h2>
-                        <button onclick="visualizarPresupuestos()">Ver Presupuestos</button>
-                        <ul id="lista-presupuestos"></ul>
-                    </div> 
+                <!-- Registrar Presupuesto -->
+                <div id="registro-presupuesto" class="mb-4">
+                    <h2 class="h4 mb-3">Registrar Presupuesto</h2>
+                    <form id="form-registro-presupuesto">
+                        <div class="mb-3">
+                            <label for="descripcion-presupuesto" class="form-label">Descripción del Presupuesto</label>
+                            <input type="text" class="form-control" id="descripcion-presupuesto" placeholder="Descripción del presupuesto" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="monto-presupuesto" class="form-label">Monto del Presupuesto</label>
+                            <input type="number" class="form-control" id="monto-presupuesto" placeholder="Monto del presupuesto" required>
+                        </div>
+                        <button type="button" class="btn btn-primary">
+                            <i class="fas fa-plus-circle"></i> Registrar Presupuesto
+                        </button>
+                    </form>
+                    <p id="mensaje-registro-presupuesto" class="mt-2"></p>
                 </div>
-            </main>
+
+                <!-- Modificar Presupuesto -->
+                <div id="modificar-presupuesto" class="mb-4">
+                    <h2 class="h4 mb-3">Modificar Presupuesto</h2>
+                    <form id="form-modificar-presupuesto">
+                        <div class="mb-3">
+                            <label for="id-modificar-presupuesto" class="form-label">ID del Presupuesto</label>
+                            <input type="number" class="form-control" id="id-modificar-presupuesto" placeholder="ID del presupuesto" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="nuevo-descripcion-presupuesto" class="form-label">Nueva Descripción</label>
+                            <input type="text" class="form-control" id="nuevo-descripcion-presupuesto" placeholder="Nueva descripción" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="nuevo-monto-presupuesto" class="form-label">Nuevo Monto</label>
+                            <input type="number" class="form-control" id="nuevo-monto-presupuesto" placeholder="Nuevo monto" required>
+                        </div>
+                        <button type="button" class="btn btn-warning">
+                            <i class="fas fa-edit"></i> Modificar Presupuesto
+                        </button>
+                    </form>
+                    <p id="mensaje-modificacion-presupuesto" class="mt-2"></p>
+                </div>
+
+                <!-- Eliminar Presupuesto -->
+                <div id="eliminar-presupuesto" class="mb-4">
+                    <h2 class="h4 mb-3">Eliminar Presupuesto</h2>
+                    <form id="form-eliminar-presupuesto">
+                        <div class="mb-3">
+                            <label for="id-eliminar-presupuesto" class="form-label">ID del Presupuesto a Eliminar</label>
+                            <input type="number" class="form-control" id="id-eliminar-presupuesto" placeholder="ID del presupuesto" required>
+                        </div>
+                        <button type="button" class="btn btn-danger">
+                            <i class="fas fa-trash-alt"></i> Eliminar Presupuesto
+                        </button>
+                    </form>
+                    <p id="mensaje-eliminacion-presupuesto" class="mt-2"></p>
+                </div>
+
+                <!-- Visualizar Presupuestos -->
+                <div id="visualizar-presupuestos" class="mb-4">
+                    <h2 class="h4 mb-3">Visualizar Presupuestos</h2>
+                    <button type="button" class="btn btn-info">
+                        <i class="fas fa-eye"></i> Ver Presupuestos
+                    </button>
+                    <ul id="lista-presupuestos" class="mt-3 list-group"></ul>
+                </div>
+            </div>
+        </main>
+
             <footer class="py-4 bg-light mt-auto">
                 <div class="container-fluid px-4">
                     <div class="d-flex align-items-center justify-content-between small">

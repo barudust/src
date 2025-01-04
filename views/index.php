@@ -115,34 +115,55 @@ $conn->close();
         <div id="layoutSidenav_content">
             <main>
                 <div class="container-fluid px-4">
-                    <section id="bienvenida">
-                        <h2>Bienvenido a Repaso de Cuentas</h2>
+                    <!-- Sección de Bienvenida -->
+                    <section id="bienvenida" class="text-center mb-5">
+                        <h2 class="my-4"><i class="fas fa-wallet"></i> Bienvenido a Repaso de Cuentas</h2>
                         <p>Tu herramienta integral para gestionar tus finanzas personales de manera efectiva y accesible.</p>
                     </section>
-            
-                    <section id="carrusel">
-                        <h2>Imágenes Representativas</h2>
-                        <div class="carousel">
-                            <img src="../assets/images/finanzas1.jpg" alt="Finanzas Personales" class="carousel-image">
-                            <img src="../assets/images/finanzas2.jpg" alt="Ahorro" class="carousel-image">
-                            <img src="../assets/images/finanzas3.jpg" alt="Inversiones" class="carousel-image">
+
+                    <!-- Sección de Carrusel de Imágenes -->
+                    <section id="carrusel" class="text-center mb-5">
+                        <h2><i class="fas fa-images"></i> Imágenes Representativas</h2>
+                        <div id="carouselExampleAutoplaying" class="carousel slide" data-bs-ride="carousel" style="max-width: 400px; margin: 0 auto;">
+                            <div class="carousel-inner">
+                                <div class="carousel-item active">
+                                    <img src="../assets/images/finanzas1.jpg" alt="Finanzas Personales" class="d-block w-100 mx-auto" style="height: 250px; object-fit: cover;">
+                                </div>
+                                <div class="carousel-item">
+                                    <img src="../assets/images/finanzas2.jpg" alt="Ahorro" class="d-block w-100 mx-auto" style="height: 250px; object-fit: cover;">
+                                </div>
+                                <div class="carousel-item">
+                                    <img src="../assets/images/finanzas3.jpg" alt="Inversiones" class="d-block w-100 mx-auto" style="height: 250px; object-fit: cover;">
+                                </div>
+                            </div>
+                            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleAutoplaying" data-bs-slide="prev">
+                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Previous</span>
+                            </button>
+                            <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleAutoplaying" data-bs-slide="next">
+                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Next</span>
+                            </button>
                         </div>
                     </section>
-            
-                    <section id="informacion-adicional">
-                        <h2>¿Qué Ofrecemos?</h2>
+
+                    <!-- Sección de Información Adicional -->
+                    <section id="informacion-adicional" class="mb-5">
+                        <h2><i class="fas fa-info-circle"></i> ¿Qué Ofrecemos?</h2>
                         <p>Nuestra aplicación te permite:</p>
-                        <ul>
-                            <li>Gestionar tus ingresos y gastos.</li>
-                            <li>Realizar un seguimiento de tus inversiones.</li>
-                            <li>Controlar tus deudas y adeudos.</li>
-                            <li>Establecer presupuestos personalizados.</li>
-                            <li>Acceder a recursos educativos sobre finanzas.</li>
+                        <ul class="list-group">
+                            <li class="list-group-item"><i class="fas fa-arrow-circle-right"></i> Gestionar tus ingresos y gastos.</li>
+                            <li class="list-group-item"><i class="fas fa-arrow-circle-right"></i> Realizar un seguimiento de tus inversiones.</li>
+                            <li class="list-group-item"><i class="fas fa-arrow-circle-right"></i> Controlar tus deudas y adeudos.</li>
+                            <li class="list-group-item"><i class="fas fa-arrow-circle-right"></i> Establecer presupuestos personalizados.</li>
+                            <li class="list-group-item"><i class="fas fa-arrow-circle-right"></i> Acceder a recursos educativos sobre finanzas.</li>
                         </ul>
                     </section>
-
                 </div>
             </main>
+
+
+
             <footer class="py-4 bg-light mt-auto">
                 <div class="container-fluid px-4">
                     <div class="d-flex align-items-center justify-content-between small">

@@ -114,19 +114,43 @@ $conn->close();
         <div id="layoutSidenav_content">
             <main>
                 <div class="container-fluid px-4">
-                    <h1>Generar Informes Financieros</h1>
+                    <h1 class="my-4 text-center">Generar Informes Financieros</h1>
 
-                    <button onclick="obtenerInformesFinancieros()">Obtener Informes Financieros</button>
-                    <ul id="lista-informes"></ul>
+                    <!-- Obtener Informes Financieros -->
+                    <div id="obtener-informes-financieros" class="mb-4">
+                        <button onclick="obtenerInformesFinancieros()" class="btn btn-primary">
+                            <i class="fas fa-file-download"></i> Obtener Informes Financieros
+                        </button>
+                    </div>
 
-                    <h2>Eliminar Informes Financieros</h2>
-                    <button onclick="eliminarInformesFinancieros('all')">Eliminar Todos los Informes</button>
-                    <button onclick="eliminarInformesFinancieros('incomes')">Eliminar Ingresos</button>
-                    <button onclick="eliminarInformesFinancieros('investments')">Eliminar Inversiones</button>
-                    <button onclick="eliminarInformesFinancieros('debts')">Eliminar Deudas</button>
-                    <button onclick="eliminarInformesFinancieros('budgets')">Eliminar Presupuestos</button>
+                    <!-- Lista de Informes Financieros -->
+                    <ul id="lista-informes" class="mt-4 list-group">
+                        <!-- Los informes generados se mostrarán aquí -->
+                    </ul>
+
+                    <h2 class="my-4">Eliminar Informes Financieros</h2>
+
+                    <!-- Botones para Eliminar Informes Financieros -->
+                    <div id="eliminar-informes" class="mb-4">
+                        <button onclick="eliminarInformesFinancieros('all')" class="btn btn-danger">
+                            <i class="fas fa-trash-alt"></i> Eliminar Todos los Informes
+                        </button>
+                        <button onclick="eliminarInformesFinancieros('incomes')" class="btn btn-danger">
+                            <i class="fas fa-trash"></i> Eliminar Ingresos
+                        </button>
+                        <button onclick="eliminarInformesFinancieros('investments')" class="btn btn-danger">
+                            <i class="fas fa-trash"></i> Eliminar Inversiones
+                        </button>
+                        <button onclick="eliminarInformesFinancieros('debts')" class="btn btn-danger">
+                            <i class="fas fa-trash"></i> Eliminar Deudas
+                        </button>
+                        <button onclick="eliminarInformesFinancieros('budgets')" class="btn btn-danger">
+                            <i class="fas fa-trash"></i> Eliminar Presupuestos
+                        </button>
+                    </div>
                 </div>
             </main>
+
             <footer class="py-4 bg-light mt-auto">
                 <div class="container-fluid px-4">
                     <div class="d-flex align-items-center justify-content-between small">

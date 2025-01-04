@@ -112,41 +112,78 @@ $conn->close();
         </div>
 
         <div id="layoutSidenav_content">
-            <main>
-                <div class="container-fluid px-4">
-                    <h1>Gestión de Deudas</h1>
+        <main>
+            <div class="container-fluid px-4">
+                <h1 class="my-4 text-center">Gestión de Deudas</h1>
 
-                    <div id="registro-deuda">
-                        <h2>Registrar Deuda</h2>
-                        <input type="text" id="descripcion-deuda" placeholder="Descripción de la deuda">
-                        <input type="number" id="monto-deuda" placeholder="Monto de la deuda">
-                        <button onclick="registrarDeuda()">Registrar Deuda</button>
-                        <p id="mensaje-registro-deuda"></p>
-                    </div>
-
-                    <div id="modificar-deuda">
-                        <h2>Modificar Deuda</h2>
-                        <input type="number" id="id-modificar-deuda" placeholder="ID de la deuda">
-                        <input type="text" id="nuevo-descripcion-deuda" placeholder="Nueva descripción">
-                        <input type="number" id="nuevo-monto-deuda" placeholder="Nuevo monto">
-                        <button onclick="modificarDeuda()">Modificar Deuda</button>
-                        <p id="mensaje-modificacion-deuda"></p>
-                    </div>
-
-                    <div id="eliminar-deuda">
-                        <h2>Eliminar Deuda</h2>
-                        <input type="number" id="id-eliminar-deuda" placeholder="ID de la deuda a eliminar">
-                        <button onclick="eliminarDeuda()">Eliminar Deuda</button>
-                        <p id="mensaje-eliminacion-deuda"></p>
-                    </div>
-
-                    <div id="visualizar-deudas">
-                        <h2>Visualizar Deudas</h2>
-                        <button onclick="visualizarDeudas()">Ver Deudas</button>
-                        <ul id="lista-deudas"></ul>
-                    </div>
+                <!-- Registrar Deuda -->
+                <div id="registro-deuda" class="mb-4">
+                    <h2 class="h4 mb-3">Registrar Deuda</h2>
+                    <form id="form-registro-deuda">
+                        <div class="mb-3">
+                            <label for="descripcion-deuda" class="form-label">Descripción de la Deuda</label>
+                            <input type="text" class="form-control" id="descripcion-deuda" placeholder="Descripción de la deuda" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="monto-deuda" class="form-label">Monto de la Deuda</label>
+                            <input type="number" class="form-control" id="monto-deuda" placeholder="Monto de la deuda" required>
+                        </div>
+                        <button type="button" class="btn btn-primary">
+                            <i class="fas fa-plus-circle"></i> Registrar Deuda
+                        </button>
+                    </form>
+                    <p id="mensaje-registro-deuda" class="mt-2"></p>
                 </div>
-            </main>
+
+                <!-- Modificar Deuda -->
+                <div id="modificar-deuda" class="mb-4">
+                    <h2 class="h4 mb-3">Modificar Deuda</h2>
+                    <form id="form-modificar-deuda">
+                        <div class="mb-3">
+                            <label for="id-modificar-deuda" class="form-label">ID de la Deuda</label>
+                            <input type="number" class="form-control" id="id-modificar-deuda" placeholder="ID de la deuda" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="nuevo-descripcion-deuda" class="form-label">Nueva Descripción</label>
+                            <input type="text" class="form-control" id="nuevo-descripcion-deuda" placeholder="Nueva descripción" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="nuevo-monto-deuda" class="form-label">Nuevo Monto</label>
+                            <input type="number" class="form-control" id="nuevo-monto-deuda" placeholder="Nuevo monto" required>
+                        </div>
+                        <button type="button" class="btn btn-warning">
+                            <i class="fas fa-edit"></i> Modificar Deuda
+                        </button>
+                    </form>
+                    <p id="mensaje-modificacion-deuda" class="mt-2"></p>
+                </div>
+
+                <!-- Eliminar Deuda -->
+                <div id="eliminar-deuda" class="mb-4">
+                    <h2 class="h4 mb-3">Eliminar Deuda</h2>
+                    <form id="form-eliminar-deuda">
+                        <div class="mb-3">
+                            <label for="id-eliminar-deuda" class="form-label">ID de la Deuda a Eliminar</label>
+                            <input type="number" class="form-control" id="id-eliminar-deuda" placeholder="ID de la deuda" required>
+                        </div>
+                        <button type="button" class="btn btn-danger">
+                            <i class="fas fa-trash-alt"></i> Eliminar Deuda
+                        </button>
+                    </form>
+                    <p id="mensaje-eliminacion-deuda" class="mt-2"></p>
+                </div>
+
+                <!-- Visualizar Deudas -->
+                <div id="visualizar-deudas" class="mb-4">
+                    <h2 class="h4 mb-3">Visualizar Deudas</h2>
+                    <button type="button" class="btn btn-info">
+                        <i class="fas fa-eye"></i> Ver Deudas
+                    </button>
+                    <ul id="lista-deudas" class="mt-3 list-group"></ul>
+                </div>
+            </div>
+        </main>
+
             <footer class="py-4 bg-light mt-auto">
                 <div class="container-fluid px-4">
                     <div class="d-flex align-items-center justify-content-between small">

@@ -112,41 +112,78 @@ $conn->close();
         </div>
 
         <div id="layoutSidenav_content">
-            <main>
-                <div class="container-fluid px-4">
-                    <h1>Gestión de Inversiones</h1>
+        <main>
+            <div class="container-fluid px-4">
+                <h1 class="my-4 text-center">Gestión de Inversiones</h1>
 
-                    <div id="registro-inversion">
-                        <h2>Registrar Inversión</h2>
-                        <input type="text" id="tipo" placeholder="Tipo de inversión (ej. acciones)">
-                        <input type="number" id="monto" placeholder="Monto a invertir">
-                        <button onclick="registrarInversion()">Registrar Inversión</button>
-                        <p id="mensaje-registro"></p>
-                    </div>
-
-                    <div id="modificar-inversion">
-                        <h2>Modificar Inversión</h2>
-                        <input type="number" id="id-modificar" placeholder="ID de inversión">
-                        <input type="text" id="nuevo-tipo" placeholder="Nuevo tipo">
-                        <input type="number" id="nuevo-monto" placeholder="Nuevo monto">
-                        <button onclick="modificarInversion()">Modificar Inversión</button>
-                        <p id="mensaje-modificacion"></p>
-                    </div>
-
-                    <div id="eliminar-inversion">
-                        <h2>Eliminar Inversión</h2>
-                        <input type="number" id="id-eliminar" placeholder="ID de inversión a eliminar">
-                        <button onclick="eliminarInversion()">Eliminar Inversión</button>
-                        <p id="mensaje-eliminacion"></p>
-                    </div>
-
-                    <div id="visualizar-inversiones">
-                        <h2>Visualizar Inversiones</h2>
-                        <button onclick="visualizarInversiones()">Ver Inversiones</button>
-                        <ul id="lista-inversiones"></ul>
-                    </div>
+                <!-- Registrar Inversión -->
+                <div id="registro-inversion" class="mb-4">
+                    <h2 class="h4 mb-3">Registrar Inversión</h2>
+                    <form id="form-registro-inversion">
+                        <div class="mb-3">
+                            <label for="tipo" class="form-label">Tipo de Inversión</label>
+                            <input type="text" class="form-control" id="tipo" placeholder="Ej. Acciones" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="monto" class="form-label">Monto a Invertir</label>
+                            <input type="number" class="form-control" id="monto" placeholder="Monto" required>
+                        </div>
+                        <button type="button" class="btn btn-primary d-flex align-items-center" onclick="registrarInversion()">
+                            <i class="fas fa-plus-circle me-2"></i> Registrar Inversión
+                        </button>
+                    </form>
+                    <p id="mensaje-registro" class="mt-2"></p>
                 </div>
-            </main>
+
+                <!-- Modificar Inversión -->
+                <div id="modificar-inversion" class="mb-4">
+                    <h2 class="h4 mb-3">Modificar Inversión</h2>
+                    <form id="form-modificar-inversion">
+                        <div class="mb-3">
+                            <label for="id-modificar" class="form-label">ID de Inversión</label>
+                            <input type="number" class="form-control" id="id-modificar" placeholder="ID de inversión" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="nuevo-tipo" class="form-label">Nuevo Tipo</label>
+                            <input type="text" class="form-control" id="nuevo-tipo" placeholder="Nuevo tipo de inversión" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="nuevo-monto" class="form-label">Nuevo Monto</label>
+                            <input type="number" class="form-control" id="nuevo-monto" placeholder="Nuevo monto" required>
+                        </div>
+                        <button type="button" class="btn btn-warning d-flex align-items-center" onclick="modificarInversion()">
+                            <i class="fas fa-edit me-2"></i> Modificar Inversión
+                        </button>
+                    </form>
+                    <p id="mensaje-modificacion" class="mt-2"></p>
+                </div>
+
+                <!-- Eliminar Inversión -->
+                <div id="eliminar-inversion" class="mb-4">
+                    <h2 class="h4 mb-3">Eliminar Inversión</h2>
+                    <form id="form-eliminar-inversion">
+                        <div class="mb-3">
+                            <label for="id-eliminar" class="form-label">ID de Inversión a Eliminar</label>
+                            <input type="number" class="form-control" id="id-eliminar" placeholder="ID de inversión" required>
+                        </div>
+                        <button type="button" class="btn btn-danger d-flex align-items-center" onclick="eliminarInversion()">
+                            <i class="fas fa-trash-alt me-2"></i> Eliminar Inversión
+                        </button>
+                    </form>
+                    <p id="mensaje-eliminacion" class="mt-2"></p>
+                </div>
+
+                <!-- Visualizar Inversiones -->
+                <div id="visualizar-inversiones" class="mb-4">
+                    <h2 class="h4 mb-3">Visualizar Inversiones</h2>
+                    <button type="button" class="btn btn-info d-flex align-items-center" onclick="visualizarInversiones()">
+                        <i class="fas fa-eye me-2"></i> Ver Inversiones
+                    </button>
+                    <ul id="lista-inversiones" class="mt-3 list-group"></ul>
+                </div>
+            </div>
+        </main>
+
             <footer class="py-4 bg-light mt-auto">
                 <div class="container-fluid px-4">
                     <div class="d-flex align-items-center justify-content-between small">

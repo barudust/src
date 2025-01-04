@@ -112,14 +112,23 @@ $conn->close();
             </div>
 
             <div id="layoutSidenav_content">
-                <main>
-                    <div class="container-fluid px-4">
-                        <h1>Análisis Financiero</h1>
+            <main>
+                <div class="container-fluid px-4">
+                    <h1 class="my-4 text-center">Análisis Financiero</h1>
 
-                        <button onclick="obtenerAnalisisFinanciero()">Ver Análisis Financiero</button>
-                        <ul id="lista-movimientos"></ul>
+                    <!-- Ver Análisis Financiero -->
+                    <div id="ver-analisis-financiero" class="mb-4">
+                        <button onclick="obtenerAnalisisFinanciero()" class="btn btn-success">
+                            <i class="fas fa-chart-line"></i> Ver Análisis Financiero
+                        </button>
                     </div>
-                </main>
+
+                    <ul id="lista-movimientos" class="mt-4 list-group">
+                        <!-- Aquí se mostrarán los movimientos o el análisis -->
+                    </ul>
+                </div>
+            </main>
+
                 <footer class="py-4 bg-light mt-auto">
                 <div class="container-fluid px-4">
                     <div class="d-flex align-items-center justify-content-between small">

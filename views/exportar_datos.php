@@ -114,19 +114,43 @@ $conn->close();
         <div id="layoutSidenav_content">
             <main>
                 <div class="container-fluid px-4">
-                    <h1>Exportar Datos Financieros</h1>
+                    <h1 class="my-4 text-center">Exportar Datos Financieros</h1>
 
-                    <button onclick="obtenerDatosFinancieros()">Obtener Datos Financieros</button>
-                    <ul id="lista-datos"></ul>
+                    <!-- Obtener Datos Financieros -->
+                    <div id="obtener-datos-financieros" class="mb-4">
+                        <button onclick="obtenerDatosFinancieros()" class="btn btn-primary">
+                            <i class="fas fa-download"></i> Obtener Datos Financieros
+                        </button>
+                    </div>
 
-                    <h2>Eliminar Datos Exportados</h2>
-                    <button onclick="eliminarDatosExportados('all')">Eliminar Todos los Datos Exportados</button>
-                    <button onclick="eliminarDatosExportados('incomes')">Eliminar Ingresos Exportados</button>
-                    <button onclick="eliminarDatosExportados('investments')">Eliminar Inversiones Exportadas</button>
-                    <button onclick="eliminarDatosExportados('debts')">Eliminar Deudas Exportadas</button>
-                    <button onclick="eliminarDatosExportados('budgets')">Eliminar Presupuestos Exportados</button>
+                    <!-- Lista de Datos Financieros -->
+                    <ul id="lista-datos" class="mt-4 list-group">
+                        <!-- Los datos exportados se mostrarán aquí -->
+                    </ul>
+
+                    <h2 class="my-4">Eliminar Datos Exportados</h2>
+
+                    <!-- Botones para Eliminar Datos Exportados -->
+                    <div id="eliminar-datos" class="mb-4">
+                        <button onclick="eliminarDatosExportados('all')" class="btn btn-danger">
+                            <i class="fas fa-trash-alt"></i> Eliminar Todos los Datos Exportados
+                        </button>
+                        <button onclick="eliminarDatosExportados('incomes')" class="btn btn-danger">
+                            <i class="fas fa-trash"></i> Eliminar Ingresos Exportados
+                        </button>
+                        <button onclick="eliminarDatosExportados('investments')" class="btn btn-danger">
+                            <i class="fas fa-trash"></i> Eliminar Inversiones Exportadas
+                        </button>
+                        <button onclick="eliminarDatosExportados('debts')" class="btn btn-danger">
+                            <i class="fas fa-trash"></i> Eliminar Deudas Exportadas
+                        </button>
+                        <button onclick="eliminarDatosExportados('budgets')" class="btn btn-danger">
+                            <i class="fas fa-trash"></i> Eliminar Presupuestos Exportados
+                        </button>
+                    </div>
                 </div>
             </main>
+
             <footer class="py-4 bg-light mt-auto">
                 <div class="container-fluid px-4">
                     <div class="d-flex align-items-center justify-content-between small">

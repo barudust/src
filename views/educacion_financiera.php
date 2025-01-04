@@ -114,34 +114,74 @@ $conn->close();
         <div id="layoutSidenav_content">
             <main>
                 <div class="container-fluid px-4">
-                    <h1>Educación Financiera</h1>
+                    <h1 class="my-4 text-center">Educación Financiera</h1>
 
-                    <section id="recursos">
-                        <h2>Recursos Útiles</h2>
-                        <h3>Libros Recomendados:</h3>
-                        <ul>
-                            <li><a href="https://www.amazon.com/dp/B00B2W4LZK" target="_blank">El Hombre Más Rico de Babilonia - George S. Clason</a></li>
-                            <li><a href="https://www.amazon.com/dp/B00G9N5X4M" target="_blank">Padre Rico, Padre Pobre - Robert Kiyosaki</a></li>
-                            <li><a href="https://www.amazon.com/dp/B00D5I8Q68" target="_blank">La Bolsa o la Vida - Joe Dominguez y Vicki Robin</a></li>
+                    <section id="recursos" class="mb-5">
+                        <h2 class="mb-3">Recursos Útiles</h2>
+
+                        <!-- Libros Recomendados -->
+                        <h3><i class="fas fa-book"></i> Libros Recomendados:</h3>
+                        <ul class="list-group mb-4">
+                            <li class="list-group-item">
+                                <a href="https://www.amazon.com/dp/B00B2W4LZK" target="_blank">
+                                    <i class="fas fa-link"></i> El Hombre Más Rico de Babilonia - George S. Clason
+                                </a>
+                            </li>
+                            <li class="list-group-item">
+                                <a href="https://www.amazon.com/dp/B00G9N5X4M" target="_blank">
+                                    <i class="fas fa-link"></i> Padre Rico, Padre Pobre - Robert Kiyosaki
+                                </a>
+                            </li>
+                            <li class="list-group-item">
+                                <a href="https://www.amazon.com/dp/B00D5I8Q68" target="_blank">
+                                    <i class="fas fa-link"></i> La Bolsa o la Vida - Joe Dominguez y Vicki Robin
+                                </a>
+                            </li>
                         </ul>
 
-                        <h3>Videos Educativos:</h3>
-                        <ul>
-                            <li><a href="https://www.youtube.com/watch?v=6vX2zHkN6H8" target="_blank">Cómo Hacer un Presupuesto Personal - YouTube</a></li>
-                            <li><a href="https://www.youtube.com/watch?v=H9bRjWg7F6s" target="_blank">Inversiones para Principiantes - YouTube</a></li>
-                            <li><a href="https://www.youtube.com/watch?v=IYH8F5Wm7fI" target="_blank">Consejos para Ahorrar Dinero - YouTube</a></li>
+                        <!-- Videos Educativos -->
+                        <h3><i class="fas fa-video"></i> Videos Educativos:</h3>
+                        <ul class="list-group mb-4">
+                            <li class="list-group-item">
+                                <a href="https://www.youtube.com/watch?v=6vX2zHkN6H8" target="_blank">
+                                    <i class="fab fa-youtube"></i> Cómo Hacer un Presupuesto Personal - YouTube
+                                </a>
+                            </li>
+                            <li class="list-group-item">
+                                <a href="https://www.youtube.com/watch?v=H9bRjWg7F6s" target="_blank">
+                                    <i class="fab fa-youtube"></i> Inversiones para Principiantes - YouTube
+                                </a>
+                            </li>
+                            <li class="list-group-item">
+                                <a href="https://www.youtube.com/watch?v=IYH8F5Wm7fI" target="_blank">
+                                    <i class="fab fa-youtube"></i> Consejos para Ahorrar Dinero - YouTube
+                                </a>
+                            </li>
                         </ul>
 
-                        <h3>Artículos Interesantes:</h3>
-                        <ul>
-                            <li><a href="https://www.investopedia.com/financial-literacy-5116275" target="_blank">Guía de Educación Financiera - Investopedia</a></li>
-                            <li><a href="https://www.moneyunder30.com/budgeting-tips" target="_blank">Consejos para Hacer un Presupuesto - Money Under 30</a></li>
-                            <li><a href="https://www.nerdwallet.com/article/finance/how-to-save-money" target="_blank">Cómo Ahorrar Dinero - NerdWallet</a></li>
+                        <!-- Artículos Interesantes -->
+                        <h3><i class="fas fa-newspaper"></i> Artículos Interesantes:</h3>
+                        <ul class="list-group">
+                            <li class="list-group-item">
+                                <a href="https://www.investopedia.com/financial-literacy-5116275" target="_blank">
+                                    <i class="fas fa-link"></i> Guía de Educación Financiera - Investopedia
+                                </a>
+                            </li>
+                            <li class="list-group-item">
+                                <a href="https://www.moneyunder30.com/budgeting-tips" target="_blank">
+                                    <i class="fas fa-link"></i> Consejos para Hacer un Presupuesto - Money Under 30
+                                </a>
+                            </li>
+                            <li class="list-group-item">
+                                <a href="https://www.nerdwallet.com/article/finance/how-to-save-money" target="_blank">
+                                    <i class="fas fa-link"></i> Cómo Ahorrar Dinero - NerdWallet
+                                </a>
+                            </li>
                         </ul>
                     </section>
-
                 </div>
             </main>
+
             <footer class="py-4 bg-light mt-auto">
                 <div class="container-fluid px-4">
                     <div class="d-flex align-items-center justify-content-between small">

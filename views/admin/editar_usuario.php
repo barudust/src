@@ -17,27 +17,71 @@ if ($conn->connect_error) {
     die("Conexión fallida: " . $conn->connect_error);
 }
 
+// Función para validar la contraseña
+function validar_contraseña($contraseña) {
+    if (strlen($contraseña) < 7) {
+        return "La contraseña debe tener al menos 7 caracteres.";
+    }
+    if (!preg_match("/[A-Z]/", $contraseña)) {
+        return "La contraseña debe contener al menos una mayúscula.";
+    }
+    if (!preg_match("/[a-z]/", $contraseña)) {
+        return "La contraseña debe contener al menos una minúscula.";
+    }
+    if (!preg_match("/[0-9]/", $contraseña)) {
+        return "La contraseña debe contener al menos un número.";
+    }
+    return true; // La contraseña es válida
+}
+
+// Función para validar el correo
+function validar_correo($correo) {
+    if (!filter_var($correo, FILTER_VALIDATE_EMAIL)) {
+        return "El correo no tiene un formato válido.";
+    }
+    return true; // El correo es válido
+}
+
+// Definir variables para almacenar los mensajes de error
+$errores = [];
+
 // Si el formulario es enviado, actualiza la información del usuario
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $nombre = $_POST['nombre'];
     $correo = $_POST['correo'];
     $password = $_POST['password']; // Se obtiene la contraseña del formulario
 
-    // Si se proporciona una nueva contraseña, actualiza la contraseña
-    if (!empty($password)) {
-        // Actualiza la contraseña como texto plano (no encriptada)
-        $sql = "UPDATE usuarios SET nombre = '$nombre', email = '$correo', contraseña = '$password' WHERE email = '$email'";
-    } else {
-        // Si no se proporciona nueva contraseña, se actualizan solo nombre y correo
-        $sql = "UPDATE usuarios SET nombre = '$nombre', email = '$correo' WHERE email = '$email'";
+    // Validar el correo
+    $validar_correo = validar_correo($correo);
+    if ($validar_correo !== true) {
+        $errores[] = $validar_correo;
     }
 
-    if ($conn->query($sql) === TRUE) {
-        $_SESSION['email'] = $correo; // Actualiza la sesión con el nuevo correo
-        header("Location: cuenta.php"); // Redirige a la página de cuenta
-        exit();
-    } else {
-        echo "Error al actualizar los datos: " . $conn->error;
+    // Validar la contraseña si se proporciona
+    if (!empty($password)) {
+        $validar_contraseña = validar_contraseña($password);
+        if ($validar_contraseña !== true) {
+            $errores[] = $validar_contraseña;
+        }
+    }
+
+    // Si no hay errores, actualizar la base de datos
+    if (empty($errores)) {
+        // Si se proporciona una nueva contraseña, actualiza la contraseña
+        if (!empty($password)) {
+            $sql = "UPDATE usuarios SET nombre = '$nombre', email = '$correo', contraseña = '$password' WHERE email = '$email'";
+        } else {
+            // Si no se proporciona nueva contraseña, se actualizan solo nombre y correo
+            $sql = "UPDATE usuarios SET nombre = '$nombre', email = '$correo' WHERE email = '$email'";
+        }
+
+        if ($conn->query($sql) === TRUE) {
+            $_SESSION['email'] = $correo; // Actualiza la sesión con el nuevo correo
+            header("Location: cuenta.php"); // Redirige a la página de cuenta
+            exit();
+        } else {
+            echo "Error al actualizar los datos: " . $conn->error;
+        }
     }
 }
 
@@ -97,10 +141,8 @@ $conn->close();
         <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
             <div class="sb-sidenav-menu">
                 <div class="nav">
-                    <a class="nav-link" href="index.php">
-                        <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
-                        Inicio
-                    </a>
+                    <!-- Menú de navegación -->
+                </div>
             </div>
         </nav>
     </div>
@@ -114,6 +156,16 @@ $conn->close();
                         <i class="fas fa-user"></i> Edita tu información
                     </div>
                     <div class="card-body">
+                        <?php
+                        // Mostrar errores
+                        if (!empty($errores)) {
+                            echo "<div class='alert alert-danger'>";
+                            foreach ($errores as $error) {
+                                echo "<p>$error</p>";
+                            }
+                            echo "</div>";
+                        }
+                        ?>
                         <form method="POST">
                             <div class="mb-3">
                                 <label for="nombre" class="form-label">Nombre</label>
@@ -124,8 +176,8 @@ $conn->close();
                                 <input type="email" class="form-control" id="correo" name="correo" value="<?php echo $correo; ?>" required>
                             </div>
                             <div class="mb-3">
-                                <label for="password" class="form-label">Contraseña</label>
-                                <input type="text" class="form-control" id="password" name="password" value="<?php echo $password; ?>" required placeholder="Nueva contraseña">
+                                <label for="password" class="form-label">Contraseña (Opcional)</label>
+                                <input type="password" class="form-control" id="password" name="password" value="" autocomplete="off" placeholder="Nueva contraseña (opcional)">
                             </div>
                             <div class="text-center">
                                 <button type="submit" class="btn btn-primary">Actualizar Información</button>

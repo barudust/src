@@ -8,36 +8,66 @@ include('conexion.php');
 // Verifica si el formulario ha sido enviado
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Obtiene los datos del formulario
-    $email = $_POST['email'];
-    $password = $_POST['password'];
-    $nombre = $_POST['nombre'];
+    $email = trim($_POST['email']);
+    $password = trim($_POST['password']);
+    $nombre = trim($_POST['nombre']);
 
     // Establecer el rol por defecto a "Usuario"
     $rol = 'Usuario';
 
-    // Consulta SQL para insertar el nuevo usuario
-    $sql = "INSERT INTO usuarios (email, contraseña, nombre, rol) VALUES (?, ?, ?, ?)";
-
-    // Prepara la consulta
-    if ($stmt = $conn->prepare($sql)) {
-        // Vincula los parámetros
-        $stmt->bind_param("ssss", $email, $password, $nombre, $rol);
-        
-        // Ejecuta la consulta
-        if ($stmt->execute()) {
-            // Si la inserción fue exitosa, redirige al index.php
-            header("Location: index.php");
-            exit();
-        } else {
-            // Si ocurre un error al insertar, muestra un mensaje de error
-            echo "<script>alert('Error al registrar el usuario. Inténtalo de nuevo.');</script>";
-        }
-
-        // Cierra la declaración
-        $stmt->close();
+    // Validar los campos
+    $error = '';
+    if (empty($email) || empty($password) || empty($nombre)) {
+        $error = "Todos los campos son obligatorios.";
+    } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $error = "El correo electrónico no es válido.";
+    } elseif (strlen($password) < 7) {
+        $error = "La contraseña debe tener al menos 7 caracteres.";
+    } elseif (!preg_match('/[a-z]/', $password) || !preg_match('/[A-Z]/', $password) || !preg_match('/\d/', $password)) {
+        $error = "La contraseña debe contener al menos una letra minúscula, una mayúscula y un número.";
     } else {
-        // Si la consulta no se pudo preparar, muestra un error
-        echo "Error al preparar la consulta: " . $conn->error;
+        // Verificar si el correo ya está registrado
+        $sqlCheckEmail = "SELECT email FROM usuarios WHERE email = ?";
+        if ($stmtCheck = $conn->prepare($sqlCheckEmail)) {
+            $stmtCheck->bind_param("s", $email);
+            $stmtCheck->execute();
+            $stmtCheck->store_result();
+            if ($stmtCheck->num_rows > 0) {
+                $error = "El correo electrónico ya está registrado.";
+            }
+            $stmtCheck->close();
+        }
+    }
+
+    // Si no hay errores, insertar el nuevo usuario
+    if (empty($error)) {
+        // Hashear la contraseña antes de guardarla
+        $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+
+        // Consulta SQL para insertar el nuevo usuario
+        $sql = "INSERT INTO usuarios (email, contraseña, nombre, rol) VALUES (?, ?, ?, ?)";
+
+        // Prepara la consulta
+        if ($stmt = $conn->prepare($sql)) {
+            // Vincula los parámetros
+            $stmt->bind_param("ssss", $email, $hashedPassword, $nombre, $rol);
+            
+            // Ejecuta la consulta
+            if ($stmt->execute()) {
+                // Si la inserción fue exitosa, redirige al index.php
+                header("Location: index.php");
+                exit();
+            } else {
+                // Si ocurre un error al insertar, muestra un mensaje de error
+                $error = "Error al registrar el usuario. Inténtalo de nuevo.";
+            }
+
+            // Cierra la declaración
+            $stmt->close();
+        } else {
+            // Si la consulta no se pudo preparar, muestra un error
+            $error = "Error al preparar la consulta: " . $conn->error;
+        }
     }
 
     // Cierra la conexión
@@ -67,13 +97,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             <div class="card shadow-lg border-0 rounded-lg mt-5">
                                 <div class="card-header"><h3 class="text-center font-weight-light my-4">Registro de Usuario</h3></div>
                                 <div class="card-body">
+                                    <!-- Mostrar errores si existen -->
+                                    <?php if (!empty($error)): ?>
+                                        <div class="alert alert-danger"><?= $error ?></div>
+                                    <?php endif; ?>
+
                                     <form id="registroForm" method="POST" action="registro.php">
                                         <div class="form-floating mb-3">
-                                            <input class="form-control" id="inputNombre" name="nombre" type="text" placeholder="Nombre" required />
+                                            <input class="form-control" id="inputNombre" name="nombre" type="text" placeholder="Nombre" value="<?= isset($nombre) ? htmlspecialchars($nombre) : '' ?>" required />
                                             <label for="inputNombre">Nombre</label>
                                         </div>
                                         <div class="form-floating mb-3">
-                                            <input class="form-control" id="inputEmail" name="email" type="email" placeholder="name@example.com" required />
+                                            <input class="form-control" id="inputEmail" name="email" type="email" placeholder="name@example.com" value="<?= isset($email) ? htmlspecialchars($email) : '' ?>" required />
                                             <label for="inputEmail">Correo</label>
                                         </div>
                                         <div class="form-floating mb-3">

@@ -41,7 +41,7 @@ CREATE TABLE transaccion (
     id_usuario INT NOT NULL,
     tipo ENUM('Ingreso', 'Egreso') NOT NULL,
     descripcion TEXT,
-    categoria ENUM('Servicios', 'Alimentos', 'Salud', 'Otros'),
+    categoria varchar(30),
     monto DECIMAL(10,2) NOT NULL,
     fecha DATE NOT NULL,
     FOREIGN KEY (id_usuario) REFERENCES usuario(id_usuario)
@@ -63,8 +63,7 @@ CREATE TABLE presupuesto (
     id_usuario INT NOT NULL,
     descripcion TEXT,
     categoria VARCHAR(50),
-    periodo ENUM('Mensual', 'Semanal', 'Anual') DEFAULT 'Mensual',
-    monto_estimado DECIMAL(10,2) NOT NULL,
-    monto_real DECIMAL(10,2),
+    fecha_inicio DATE NOT NULL,  -- Fecha de inicio de la quincena
+    monto DECIMAL(10,2),
     FOREIGN KEY (id_usuario) REFERENCES usuario(id_usuario)
 );

@@ -16,13 +16,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $email = $_POST['email'];
     $password = $_POST['password'];
 
-    // Consulta SQL para verificar si las credenciales son correctas
-    $sql = "SELECT * FROM usuarios WHERE email = ? AND contraseña = ?";
+    // Consulta SQL para obtener la información del usuario
+    $sql = "SELECT * FROM usuarios WHERE email = ?";
 
     // Prepara la consulta
     if ($stmt = $conn->prepare($sql)) {
-        // Vincula los parámetros
-        $stmt->bind_param("ss", $email, $password);
+        // Vincula el parámetro
+        $stmt->bind_param("s", $email);
         
         // Ejecuta la consulta
         $stmt->execute();
@@ -30,25 +30,31 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         // Obtiene el resultado
         $result = $stmt->get_result();
 
-        // Verifica si la consulta fue exitosa
+        // Verifica si el usuario existe
         if ($result->num_rows > 0) {
             // Obtiene los datos del usuario
             $usuario = $result->fetch_assoc();
             
-            // Guarda la sesión con el correo
-            $_SESSION['email'] = $email;
+            // Verifica la contraseña
+            if (password_verify($password, $usuario['contraseña'])) {
+                // Guarda la sesión con el correo
+                $_SESSION['email'] = $email;
 
-            // Verifica el rol del usuario
-            if ($usuario['rol'] == 'Administrador') {
-                // Redirige a la página de administración si es administrador
-                header("Location: admin/index.php");
+                // Verifica el rol del usuario
+                if ($usuario['rol'] == 'Administrador') {
+                    // Redirige a la página de administración si es administrador
+                    header("Location: admin/index.php");
+                } else {
+                    // Redirige al usuario normal al index
+                    header("Location: index.php");
+                }
+                exit();
             } else {
-                // Redirige al usuario normal al index
-                header("Location: index.php");
+                // Contraseña incorrecta
+                echo "<script>alert('Credenciales incorrectas');</script>";
             }
-            exit();
         } else {
-            // Si las credenciales no son correctas, muestra un mensaje de error
+            // Usuario no encontrado
             echo "<script>alert('Credenciales incorrectas');</script>";
         }
 
@@ -63,7 +69,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $conn->close();
 }
 ?>
-
 
 <!DOCTYPE html>
 <html lang="es">
@@ -85,7 +90,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <div class="row justify-content-center">
                         <div class="col-lg-5">
                             <div class="card shadow-lg border-0 rounded-lg mt-5">
-                                <div class="card-header"><h3 class="text-center font-weight-light my-4">Login</h3></div>
+                                <div class="card-header">
+                                    <h3 class="text-center font-weight-light my-4">Login</h3>
+                                </div>
                                 <div class="card-body">
                                     <form id="loginForm" method="POST" action="login.php">
                                         <div class="form-floating mb-3">
@@ -114,7 +121,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <footer class="py-4 bg-light mt-auto">
                 <div class="container-fluid px-4">
                     <div class="d-flex align-items-center justify-content-between small">
-                        <div class="text-muted"> &copy; 2024 Repaso de Cuentas. Todos los derechos reservados.</div>
+                        <div class="text-muted">&copy; 2024 Repaso de Cuentas. Todos los derechos reservados.</div>
                     </div>
                 </div>
             </footer>

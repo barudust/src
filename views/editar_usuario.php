@@ -69,7 +69,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (empty($errores)) {
         // Si se proporciona una nueva contraseña, actualiza la contraseña
         if (!empty($password)) {
-            $sql = "UPDATE usuarios SET nombre = '$nombre', email = '$correo', contraseña = '$password' WHERE email = '$email'";
+            // Encriptar la contraseña antes de almacenarla
+            $password_hash = password_hash($password, PASSWORD_BCRYPT);
+
+            $sql = "UPDATE usuarios SET nombre = '$nombre', email = '$correo', contraseña = '$password_hash' WHERE email = '$email'";
         } else {
             // Si no se proporciona nueva contraseña, se actualizan solo nombre y correo
             $sql = "UPDATE usuarios SET nombre = '$nombre', email = '$correo' WHERE email = '$email'";
@@ -86,7 +89,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 }
 
 // Consulta para obtener los datos actuales del usuario
-$sql = "SELECT nombre, email, contraseña FROM usuarios WHERE email = '$email'";
+$sql = "SELECT nombre, email FROM usuarios WHERE email = '$email'";
 $result = $conn->query($sql);
 
 // Verificar si la consulta se ejecutó correctamente y devolvió resultados
@@ -95,11 +98,9 @@ if ($result) {
         $row = $result->fetch_assoc();
         $nombre = $row['nombre'];
         $correo = $row['email'];
-        $password = $row['contraseña']; // Obtiene la contraseña sin encriptar
     } else {
         $nombre = "Usuario";
         $correo = "Correo no disponible";
-        $password = ""; // Si no hay contraseña, se muestra vacía
     }
 } else {
     echo "Error en la consulta: " . $conn->error;

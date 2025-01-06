@@ -22,7 +22,6 @@ if ($result->num_rows > 0) {
 
 // Manejar creación de usuario
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Verificar si los datos están presentes y no están vacíos
     $nombreUsuario = isset($_POST['nombre']) ? trim($_POST['nombre']) : '';
     $emailUsuario = isset($_POST['email']) ? trim($_POST['email']) : '';
     $rolUsuario = isset($_POST['rol']) ? trim($_POST['rol']) : '';
@@ -44,10 +43,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($resultCheckEmail->num_rows > 0) {
             $error = "El correo electrónico ya está registrado.";
         } else {
-            // Realizar inserción en la base de datos solo si todos los campos son válidos
-            $sqlInsert = "INSERT INTO usuarios (nombre, email, rol, contraseña) VALUES ('$nombreUsuario', '$emailUsuario', '$rolUsuario', '$contrasenaUsuario')";
+            // Encriptar la contraseña antes de guardar
+            $hashedPassword = password_hash($contrasenaUsuario, PASSWORD_BCRYPT);
+
+            // Realizar inserción en la base de datos
+            $sqlInsert = "INSERT INTO usuarios (nombre, email, rol, contraseña) VALUES ('$nombreUsuario', '$emailUsuario', '$rolUsuario', '$hashedPassword')";
             if ($conn->query($sqlInsert) === TRUE) {
-                // Redirigir al index.php después de insertar el usuario correctamente
                 header("Location: index.php");
                 exit();
             } else {
@@ -69,7 +70,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
 </head>
 <body class="sb-nav-fixed">
-    
 <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
     <a class="navbar-brand ps-3" href="index.php">Repaso de Cuentas</a>
     <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle"><i class="fas fa-bars"></i></button>

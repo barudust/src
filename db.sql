@@ -3,7 +3,7 @@ CREATE DATABASE IF NOT EXISTS financiamiento;
 USE financiamiento;
 
 -- Tabla usuario
-CREATE TABLE usuario (
+CREATE TABLE usuarios (
     id_usuario INT AUTO_INCREMENT PRIMARY KEY,
     nombre VARCHAR(100) NOT NULL,
     email VARCHAR(100) NOT NULL UNIQUE,

@@ -14,7 +14,7 @@ $email = $_SESSION['email'];
 include('conexion.php'); // Suponiendo que la conexión está en este archivo
 
 // Consulta para obtener el nombre del usuario por el email
-$sql = "SELECT nombre FROM usuario WHERE email = '$email'";
+$sql = "SELECT nombre FROM usuarios WHERE email = '$email'";
 $result = $conn->query($sql);
 
 // Verifica si se obtuvo el nombre correctamente
@@ -49,7 +49,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     include('conexion.php');
 
     // Obtener el ID del usuario
-    $sql_usuario = "SELECT id_usuario FROM usuario WHERE email = '$email'";
+    $sql_usuario = "SELECT id_usuario FROM usuarios WHERE email = '$email'";
     $result_usuario = $conn->query($sql_usuario);
     $row_usuario = $result_usuario->fetch_assoc();
     $id_usuario = $row_usuario['id_usuario'];
@@ -169,38 +169,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <div class="container-fluid px-4">
             <h1 class="my-4 text-center">Gestión de Ingresos</h1>
 
-            <!-- Botón para agregar ingreso -->
-            <button class="btn btn-sm btn-primary" onclick="mostrarFormulario()">
-                <i class="fas fa-plus-circle"></i> Agregar Ingreso
-            </button>
-
-            <!-- Formulario de registro de ingresos -->
-            <div id="formulario-ingreso" class="mb-4" style="display: none;">
-                <h2 class="h4 mb-3">Registrar Ingreso</h2>
-                <form method="POST" id="form-registro-ingreso" onsubmit="return validarMonto('monto-ingreso')">
-                    <div class="mb-3">
-                        <label for="fecha-ingreso" class="form-label">Fecha del Ingreso</label>
-                        <input type="date" class="form-control" id="fecha-ingreso" name="fecha" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="descripcion-ingreso" class="form-label">Descripción del Ingreso</label>
-                        <input type="text" class="form-control" id="descripcion-ingreso" name="descripcion" placeholder="Descripción del ingreso" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="monto-ingreso" class="form-label">Monto del Ingreso</label>
-                        <input type="number" class="form-control" id="monto-ingreso" name="monto" placeholder="Monto del ingreso" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="categoria-ingreso" class="form-label">Categoría del Ingreso</label>
-                        <input type="text" class="form-control" id="categoria-ingreso" name="categoria" placeholder="Categoría del ingreso" required>
-                    </div>
-                    <button type="submit" class="btn btn-sm btn-primary">
-                        <i class="fas fa-plus-circle"></i> Registrar Ingreso
-                    </button>
-                </form>
-                <p id="mensaje-registro-ingreso" class="mt-2"></p>
-            </div>
-
             <!-- Tabla de Ingresos -->
             <div class="mb-4">
                 <h2 class="h4 mb-3">Ingresos Registrados</h2>
@@ -236,9 +204,46 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     </tbody>
                 </table>
             </div>
+
+            <!-- Botón para agregar ingreso -->
+            <button class="btn btn-sm btn-primary" onclick="mostrarFormulario()">
+                <i class="fas fa-plus-circle"></i> Agregar Ingreso
+            </button>
+
+            <!-- Formulario de registro de ingresos -->
+            <div id="formulario-ingreso" class="mb-4" style="display: none;">
+                <h2 class="h4 mb-3">Registrar Ingreso</h2>
+                <form method="POST" id="form-registro-ingreso" onsubmit="return validarMonto('monto-ingreso')">
+                    <div class="mb-3">
+                        <label for="fecha-ingreso" class="form-label">Fecha del Ingreso</label>
+                        <input type="date" class="form-control" id="fecha-ingreso" name="fecha" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="descripcion-ingreso" class="form-label">Descripción del Ingreso</label>
+                        <input type="text" class="form-control" id="descripcion-ingreso" name="descripcion" placeholder="Descripción del ingreso" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="monto-ingreso" class="form-label">Monto del Ingreso</label>
+                        <input type="number" class="form-control" id="monto-ingreso" name="monto" placeholder="Monto del ingreso" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="categoria-ingreso" class="form-label">Categoría del Ingreso</label>
+                        <input type="text" class="form-control" id="categoria-ingreso" name="categoria" placeholder="Categoría del ingreso" required>
+                    </div>
+                    <button type="submit" class="btn btn-sm btn-primary">
+                        <i class="fas fa-plus-circle"></i> Registrar Ingreso
+                    </button>
+                </form>
+                <p id="mensaje-registro-ingreso" class="mt-2"></p>
+            </div>
+
+            
         </div>
     </main>
 </div>
 </div>
+<script src="../js/bootstrap.bundle.min.js"></script>
+<script src="../js/scripts.js"></script>
 </body>
+
 </html>

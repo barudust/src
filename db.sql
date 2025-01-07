@@ -23,17 +23,17 @@ CREATE TABLE adeudo (
     FOREIGN KEY (id_usuario) REFERENCES usuario(id_usuario)
 );
 
--- Tabla deuda
 CREATE TABLE deuda (
     id_deuda INT AUTO_INCREMENT PRIMARY KEY,
     id_usuario INT NOT NULL,
-    monto DECIMAL(10,2) NOT NULL,
-    entidad_acreedora VARCHAR(100),
-    fecha_pago DATE NOT NULL,
-    tasa_interes DECIMAL(5,2),
-    pagos_pendientes INT,
+    entidad VARCHAR(100) NOT NULL,
+    monto_deuda DECIMAL(10,2) NOT NULL,
+    tasa_interes DECIMAL(5,2) DEFAULT 0.00,
+    descripcion TEXT,  -- Descripción adicional de la deuda
+    estatus ENUM('pendiente', 'pagado') DEFAULT 'pendiente',  -- Estado de la deuda
     FOREIGN KEY (id_usuario) REFERENCES usuario(id_usuario)
 );
+
 
 -- Tabla transaccion
 CREATE TABLE transaccion (

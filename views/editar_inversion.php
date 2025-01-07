@@ -12,62 +12,61 @@ $email = $_SESSION['email'];
 // Conectar a la base de datos
 include('conexion.php');
 
-// Consulta para obtener el nombre del usuario por el email
-$sql = "SELECT nombre FROM usuarios WHERE email = ?";
-$stmt = $conn->prepare($sql);
-$stmt->bind_param("s", $email);
-$stmt->execute();
-$result = $stmt->get_result();
-
-$nombre = "Usuario";
-if ($result->num_rows > 0) {
-    $row = $result->fetch_assoc();
-    $nombre = $row['nombre'];
+// Obtener el nombre del usuario
+$sqlNombre = "SELECT nombre FROM usuarios WHERE email = ?";
+$stmtNombre = $conn->prepare($sqlNombre);
+$stmtNombre->bind_param("s", $email);
+$stmtNombre->execute();
+$resultNombre = $stmtNombre->get_result();
+if ($resultNombre->num_rows > 0) {
+    $user = $resultNombre->fetch_assoc();
+    $nombre = $user['nombre'];
+} else {
+    echo "<script>alert('Usuario no encontrado.');</script>";
+    exit();
 }
-$stmt->close();
+$stmtNombre->close();
 
-// Procesar formulario de registro
+// Obtener el ID de la inversión a modificar
+if (isset($_GET['id'])) {
+    $id_inversion = $_GET['id'];
+
+    // Consultar la inversión específica
+    $sql = "SELECT * FROM inversion WHERE id_inversion = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("i", $id_inversion);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    
+    if ($result->num_rows > 0) {
+        $inversion = $result->fetch_assoc();
+    } else {
+        echo "<script>alert('Inversión no encontrada.');</script>";
+        exit();
+    }
+    $stmt->close();
+}
+
+// Procesar el formulario de modificación
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['tipo'], $_POST['monto'], $_POST['rendimiento'])) {
     $tipo = $_POST['tipo'];
     $monto = $_POST['monto'];
     $rendimiento = $_POST['rendimiento'];
 
-    // Insertar datos en la base de datos
-    $sqlInsert = "INSERT INTO inversion (id_usuario, tipo, monto, rendimiento) VALUES (?, ?, ?, ?)";
-    $stmtInsert = $conn->prepare($sqlInsert);
+    // Actualizar la inversión en la base de datos
+    $sqlUpdate = "UPDATE inversion SET tipo = ?, monto = ?, rendimiento = ? WHERE id_inversion = ?";
+    $stmtUpdate = $conn->prepare($sqlUpdate);
+    $stmtUpdate->bind_param("sdii", $tipo, $monto, $rendimiento, $id_inversion);
 
-    // Obtener el id del usuario desde la sesión
-    $stmtUser = $conn->prepare("SELECT id_usuario FROM usuarios WHERE email = ?");
-    $stmtUser->bind_param("s", $email);
-    $stmtUser->execute();
-    $resultUser = $stmtUser->get_result();
-    if ($resultUser->num_rows > 0) {
-        $userRow = $resultUser->fetch_assoc();
-        $userId = $userRow['id_usuario'];
-    }
-
-    // Ejecutar la inserción
-    $stmtInsert->bind_param("isdd", $userId, $tipo, $monto, $rendimiento);
-    if ($stmtInsert->execute()) {
-        echo "<script>alert('Inversión registrada correctamente.');</script>";
+    if ($stmtUpdate->execute()) {
+        echo "<script>alert('Inversión modificada correctamente.'); window.location.href = 'inversiones.php';</script>";
     } else {
-        echo "<script>alert('Error al registrar la inversión.');</script>";
+        echo "<script>alert('Error al modificar la inversión.');</script>";
     }
     
-    // Cerrar la conexión
-    $stmtInsert->close();
-    $stmtUser->close();
+    $stmtUpdate->close();
 }
 
-// Consultar todas las inversiones
-$sqlInversiones = "SELECT * FROM inversion";
-$resultInversiones = $conn->query($sqlInversiones);
-$inversiones = [];
-if ($resultInversiones->num_rows > 0) {
-    while ($row = $resultInversiones->fetch_assoc()) {
-        $inversiones[] = $row;
-    }
-}
 $conn->close();
 ?>
 
@@ -76,16 +75,10 @@ $conn->close();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Inversiones</title>
+    <title>Modificar Inversión</title>
     <link rel="stylesheet" href="../css/bootstrap.min.css">
     <link href="../css/styles.css" rel="stylesheet" />
     <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
-    <script>
-        function toggleFormulario() {
-            const formulario = document.getElementById("formulario-registro");
-            formulario.style.display = formulario.style.display === "none" ? "block" : "none";
-        }
-    </script>
 </head>
 <body class="sb-nav-fixed">
 <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
@@ -156,60 +149,25 @@ $conn->close();
     <div id="layoutSidenav_content">
         <main>
             <div class="container-fluid px-4">
-                <h1 class="my-4 text-center">Gestión de Inversiones</h1>
+                <h1 class="my-4 text-center">Modificar Inversión</h1>
 
-                <!-- Tabla de inversiones -->
-                <div id="tabla-inversiones" class="mb-4">
-                    <h2 class="h4 mb-3">Listado de Inversiones</h2>
-                    <table class="table table-bordered">
-                        <thead class="table-dark">
-                            <tr>
-                                <th>ID</th>
-                                <th>Tipo</th>
-                                <th>Monto</th>
-                                <th>Rendimiento</th>
-                                <th>Acciones</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php foreach ($inversiones as $inversion): ?>
-                                <tr>
-                                    <td><?= $inversion['id_inversion']; ?></td>
-                                    <td><?= $inversion['tipo']; ?></td>
-                                    <td>$<?= number_format($inversion['monto'], 2); ?></td>
-                                    <td><?= $inversion['rendimiento']; ?>%</td>
-                                    <td>
-                                        <a href="editar_inversion.php?id=<?= $inversion['id_inversion']; ?>" class="btn btn-warning btn-sm">Modificar</a>
-                                        <a href="eliminar_inversion.php?id=<?= $inversion['id_inversion']; ?>" class="btn btn-danger btn-sm">Eliminar</a>
-                                    </td>
-                                </tr>
-                            <?php endforeach; ?>
-                        </tbody>
-                    </table>
-                </div>
-
-                <!-- Botón para mostrar/ocultar formulario -->
-                <div class="text-center mb-4">
-                    <button class="btn btn-primary" onclick="toggleFormulario()">Agregar formulario</button>
-                </div>
-
-                <!-- Formulario de registro -->
-                <div id="formulario-registro" style="display: none;">
-                    <h2 class="h4">Registrar Inversión</h2>
-                    <form action="inversiones.php" method="post">
+                <!-- Formulario de modificación -->
+                <div class="mb-4">
+                    <h2 class="h4 mb-3">Modificar Inversión #<?= $inversion['id_inversion']; ?></h2>
+                    <form action="editar_inversion.php?id=<?= $id_inversion; ?>" method="post">
                         <div class="mb-3">
                             <label for="tipo" class="form-label">Tipo de Inversión</label>
-                            <input type="text" class="form-control" id="tipo" name="tipo" required>
+                            <input type="text" class="form-control" id="tipo" name="tipo" value="<?= $inversion['tipo']; ?>" required>
                         </div>
                         <div class="mb-3">
                             <label for="monto" class="form-label">Monto</label>
-                            <input type="number" class="form-control" id="monto" name="monto" required>
+                            <input type="number" class="form-control" id="monto" name="monto" value="<?= $inversion['monto']; ?>" required>
                         </div>
                         <div class="mb-3">
                             <label for="rendimiento" class="form-label">Rendimiento (%)</label>
-                            <input type="number" step="0.01" class="form-control" id="rendimiento" name="rendimiento" required>
+                            <input type="number" step="0.01" class="form-control" id="rendimiento" name="rendimiento" value="<?= $inversion['rendimiento']; ?>" required>
                         </div>
-                        <button type="submit" class="btn btn-success">Registrar</button>
+                        <button type="submit" class="btn btn-success">Modificar</button>
                     </form>
                 </div>
             </div>

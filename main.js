@@ -12,7 +12,7 @@ function createWindow() {
   });
 
   // Carga la URL de tu archivo PHP
-  window.loadURL("http://localhost/mi-aplicacion/src/views/login.php"); // Ajusta esta URL según tu configuración
+  window.loadURL("http://localhost/mi-aplicacion/src/src/views/"); // Ajusta esta URL según tu configuración
 }
 
 module.exports = {

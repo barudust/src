@@ -1,6 +1,6 @@
 <?php
 session_start(); // Inicia la sesión
-
+$mensaje = "";
 // Verifica si el usuario está autenticado
 if (!isset($_SESSION['email'])) {
     header("Location: login.php");
@@ -67,8 +67,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $result_verificar = $stmt_verificar->get_result();
 
             if ($result_verificar->num_rows > 0) {
-                echo "<script>alert('Ya existe un presupuesto para esta quincena. No se puede registrar otro.');</script>";
-            } else {
+                $mensaje = "<div style='color: red; background-color: #f8d7da; border: 1px solid #f5c6cb; padding: 10px; border-radius: 5px; width: fit-content; margin-bottom: 15px;'>
+                Ya existe un presupuesto para esta quincena. No se puede registrar otro.
+              </div>";}
+               else {
+               
                 // Insertar el nuevo presupuesto en la base de datos
                 $stmt_insert = $conn->prepare("INSERT INTO presupuesto (id_usuario, descripcion, categoria, fecha_inicio, fecha_fin, monto) VALUES (?, ?, ?, ?, ?, ?)");
                 $categoria = 'Categoría'; // Ajusta la categoría según sea necesario
@@ -242,6 +245,8 @@ $conn->close();
                     <button type="button" class="btn btn-success" data-bs-toggle="collapse" data-bs-target="#registro-presupuesto">
                         <i class="fas fa-plus-circle"></i> Crear Nuevo Presupuesto
                     </button>
+                    <?php  echo $mensaje;
+                     ?>
                 </div>
 
                 <!-- Registrar Presupuesto -->

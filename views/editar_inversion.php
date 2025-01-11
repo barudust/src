@@ -59,7 +59,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['tipo'], $_POST['monto'
     $stmtUpdate->bind_param("sdii", $tipo, $monto, $rendimiento, $id_inversion);
 
     if ($stmtUpdate->execute()) {
-        echo "<script>alert('Inversión modificada correctamente.'); window.location.href = 'inversiones.php';</script>";
+        echo "<script> window.location.href = 'inversiones.php';</script>";
     } else {
         echo "<script>alert('Error al modificar la inversión.');</script>";
     }

@@ -27,14 +27,12 @@ if ($result->num_rows > 0) {
 $stmt->close();
 
 // Procesar formulario de registro
-if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['tipo'], $_POST['monto'], $_POST['rendimiento'])) {
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['tipo'], $_POST['monto'], $_POST['rendimiento'], $_POST['fecha_inicio'], $_POST['fecha_fin'])) {
     $tipo = $_POST['tipo'];
     $monto = $_POST['monto'];
     $rendimiento = $_POST['rendimiento'];
-
-    // Insertar datos en la base de datos
-    $sqlInsert = "INSERT INTO inversion (id_usuario, tipo, monto, rendimiento) VALUES (?, ?, ?, ?)";
-    $stmtInsert = $conn->prepare($sqlInsert);
+    $fecha_inicio = $_POST['fecha_inicio'];
+    $fecha_fin = $_POST['fecha_fin'];
 
     // Obtener el id del usuario desde la sesión
     $stmtUser = $conn->prepare("SELECT id_usuario FROM usuarios WHERE email = ?");
@@ -44,18 +42,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['tipo'], $_POST['monto'
     if ($resultUser->num_rows > 0) {
         $userRow = $resultUser->fetch_assoc();
         $userId = $userRow['id_usuario'];
-    }
 
-    // Ejecutar la inserción
-    $stmtInsert->bind_param("isdd", $userId, $tipo, $monto, $rendimiento);
-    if ($stmtInsert->execute()) {
-        echo "<script>alert('Inversión registrada correctamente.');</script>";
-    } else {
-        echo "<script>alert('Error al registrar la inversión.');</script>";
+        // Insertar datos en la base de datos
+        $sqlInsert = "INSERT INTO inversion (id_usuario, tipo, monto, rendimiento, fecha_inicio, fecha_fin) VALUES (?, ?, ?, ?, ?, ?)";
+        $stmtInsert = $conn->prepare($sqlInsert);
+        $stmtInsert->bind_param("isddss", $userId, $tipo, $monto, $rendimiento, $fecha_inicio, $fecha_fin);
+
+        if ($stmtInsert->execute()) {
+        } else {
+            echo "<script>alert('Error al registrar la inversión.');</script>";
+        }
+        $stmtInsert->close();
     }
-    
-    // Cerrar la conexión
-    $stmtInsert->close();
     $stmtUser->close();
 }
 
@@ -70,6 +68,7 @@ if ($resultInversiones->num_rows > 0) {
 }
 $conn->close();
 ?>
+
 
 <!DOCTYPE html>
 <html lang="es">
@@ -168,6 +167,8 @@ $conn->close();
                                 <th>Tipo</th>
                                 <th>Monto</th>
                                 <th>Rendimiento</th>
+                                <th>Fecha inicio</th>
+                                <th>Fecha fin</th>
                                 <th>Acciones</th>
                             </tr>
                         </thead>
@@ -178,6 +179,8 @@ $conn->close();
                                     <td><?= $inversion['tipo']; ?></td>
                                     <td>$<?= number_format($inversion['monto'], 2); ?></td>
                                     <td><?= $inversion['rendimiento']; ?>%</td>
+                                    <td><?= $inversion['fecha_inicio']; ?></td>
+                                    <td><?= $inversion['fecha_fin']; ?></td>
                                     <td>
                                         <a href="editar_inversion.php?id=<?= $inversion['id_inversion']; ?>" class="btn btn-warning btn-sm">Modificar</a>
                                         <a href="eliminar_inversion.php?id=<?= $inversion['id_inversion']; ?>" class="btn btn-danger btn-sm">Eliminar</a>
@@ -190,7 +193,7 @@ $conn->close();
 
                 <!-- Botón para mostrar/ocultar formulario -->
                 <div class="text-center mb-4">
-                    <button class="btn btn-primary" onclick="toggleFormulario()">Agregar formulario</button>
+                    <button class="btn btn-primary" onclick="toggleFormulario()">Agregar inversion</button>
                 </div>
 
                 <!-- Formulario de registro -->
@@ -203,14 +206,26 @@ $conn->close();
                         </div>
                         <div class="mb-3">
                             <label for="monto" class="form-label">Monto</label>
-                            <input type="number" class="form-control" id="monto" name="monto" required>
+                            <input type="number" class="form-control" id="monto" name="monto" min="0" step="0.01" required>
+                            <small class="text-muted">Debe ser un número positivo con máximo dos decimales.</small>
                         </div>
                         <div class="mb-3">
                             <label for="rendimiento" class="form-label">Rendimiento (%)</label>
-                            <input type="number" step="0.01" class="form-control" id="rendimiento" name="rendimiento" required>
+                            <input type="number" class="form-control" id="rendimiento" name="rendimiento" min="0" step="0.01" required>
+                            <small class="text-muted">Debe ser un número positivo con máximo dos decimales.</small>
                         </div>
+                        <div class="mb-3">
+                            <label for="fecha_inicio" class="form-label">Fecha de Inicio</label>
+                            <input type="date" class="form-control" id="fecha_inicio" name="fecha_inicio" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="fecha_fin" class="form-label">Fecha de Fin</label>
+                            <input type="date" class="form-control" id="fecha_fin" name="fecha_fin" required>
+                        </div>
+                        <div id="mensaje-error" class="text-danger mb-3" style="display: none;"></div>
                         <button type="submit" class="btn btn-success">Registrar</button>
                     </form>
+
                 </div>
             </div>
         </main>
@@ -224,6 +239,30 @@ $conn->close();
         </footer>
     </div>
 </div>
+<script>
+    document.getElementById('formulario-registro').addEventListener('submit', function(event) {
+    // Obtener valores de las fechas
+    const fechaInicio = document.getElementById('fecha_inicio').value;
+    const fechaFin = document.getElementById('fecha_fin').value;
+
+    // Convertir las fechas a objetos Date para compararlas
+    const inicio = new Date(fechaInicio);
+    const fin = new Date(fechaFin);
+
+    // Referencia al contenedor del mensaje
+    const mensajeError = document.getElementById('mensaje-error');
+
+    // Validar que la fecha de fin sea mayor o igual a la fecha de inicio
+    if (fin < inicio) {
+        event.preventDefault(); // Detener el envío del formulario
+        mensajeError.style.display = 'block';
+        mensajeError.textContent = 'La fecha de fin debe ser igual o mayor a la fecha de inicio.';
+    } else {
+        mensajeError.style.display = 'none'; // Ocultar mensaje de error
+    }
+});
+
+</script>
 
 <script src="../js/bootstrap.bundle.min.js"></script>
 <script src="../js/scripts.js"></script>

@@ -22,7 +22,7 @@ if (isset($_GET['id'])) {
     $stmtDelete->bind_param("i", $id_inversion);
 
     if ($stmtDelete->execute()) {
-        echo "<script>alert('Inversión eliminada correctamente.'); window.location.href = 'inversiones.php';</script>";
+        echo "<script> window.location.href = 'inversiones.php';</script>";
     } else {
         echo "<script>alert('Error al eliminar la inversión.'); window.location.href = 'inversiones.php';</script>";
     }

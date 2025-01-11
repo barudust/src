@@ -58,7 +58,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $sql_insert = "INSERT INTO transaccion (id_usuario, fecha, descripcion, monto, categoria, tipo) VALUES ('$id_usuario', '$fecha', '$descripcion', '$monto', '$categoria', 'Ingreso')";
     
     if ($conn->query($sql_insert) === TRUE) {
-        echo "<script>alert('Ingreso registrado correctamente.');</script>";
+        // Redirige a la misma página para actualizar los datos
+        header("Location: ingresos.php");
+        exit(); // Termina el script después de la redirección
     } else {
         echo "Error: " . $conn->error;
     }
@@ -214,6 +216,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <div id="formulario-ingreso" class="mb-4" style="display: none;">
                 <h2 class="h4 mb-3">Registrar Ingreso</h2>
                 <form method="POST" id="form-registro-ingreso" onsubmit="return validarMonto('monto-ingreso')">
+                    
                     <div class="mb-3">
                         <label for="fecha-ingreso" class="form-label">Fecha del Ingreso</label>
                         <input type="date" class="form-control" id="fecha-ingreso" name="fecha" required>
@@ -224,8 +227,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     </div>
                     <div class="mb-3">
                         <label for="monto-ingreso" class="form-label">Monto del Ingreso</label>
-                        <input type="number" class="form-control" id="monto-ingreso" name="monto" placeholder="Monto del ingreso" required>
+                        <input type="number" class="form-control" id="monto-ingreso" name="monto" placeholder="Monto del ingreso" required min="0.01" step="0.01">
                     </div>
+
                     <div class="mb-3">
                         <label for="categoria-ingreso" class="form-label">Categoría del Ingreso</label>
                         <input type="text" class="form-control" id="categoria-ingreso" name="categoria" placeholder="Categoría del ingreso" required>
@@ -242,6 +246,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     </main>
 </div>
 </div>
+<script> 
+function validarMonto(id) {
+    let monto = document.getElementById(id).value;
+
+    // Validación con expresión regular: números positivos con hasta 2 decimales
+    let regex = /^[0-9]+(\.[0-9]{1,2})?$/;
+
+    if (!regex.test(monto)) {
+        alert("El monto debe ser un número positivo con hasta dos decimales.");
+        return false;
+    }
+
+    return true;
+}
+</script>
 <script src="../js/bootstrap.bundle.min.js"></script>
 <script src="../js/scripts.js"></script>
 </body>

@@ -35,11 +35,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $fecha_inicio = $_POST['fecha_inicio'] ?? '';
 
     if (empty($descripcion) || empty($monto) || empty($fecha_inicio)) {
-        echo "<script>alert('Todos los campos son obligatorios');</script>";
     } else {
         // Validar monto como número positivo
         if (!is_numeric($monto) || $monto <= 0) {
-            echo "<script>alert('El monto debe ser un número positivo');</script>";
         } else {
             $fecha_inicio_obj = new DateTime($fecha_inicio);
             $dia_inicio = $fecha_inicio_obj->format('d');
@@ -76,9 +74,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 $categoria = 'Categoría'; // Ajusta la categoría según sea necesario
                 $stmt_insert->bind_param("issssd", $id_usuario, $descripcion, $categoria, $fecha_inicio, $fecha_fin, $monto);
                 if ($stmt_insert->execute()) {
-                    echo "<script>alert('Presupuesto registrado exitosamente');</script>";
                 } else {
-                    echo "<script>alert('Error al registrar el presupuesto: " . $stmt_insert->error . "');</script>";
                 }
                 $stmt_insert->close();
             }
@@ -255,25 +251,210 @@ $conn->close();
                         </div>
 
                     <h2 class="h4 mb-3">Registrar Presupuesto</h2>
-                    <form method="POST" action="presupuestos.php">
-                        <div class="mb-3">
-                            <label for="descripcion-presupuesto" class="form-label">Descripción del Presupuesto</label>
-                            <input type="text" class="form-control" id="descripcion-presupuesto" name="descripcion" placeholder="Descripción" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="monto-presupuesto" class="form-label">Monto</label>
-                            <input type="number" class="form-control" id="monto-presupuesto" name="monto" placeholder="Monto" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="fecha_inicio" class="form-label">Fecha de Inicio</label>
-                            <input type="date" class="form-control" id="fecha_inicio" name="fecha_inicio" required>
-                        </div>
-                        <button type="submit" class="btn btn-primary">Registrar Presupuesto</button>
-                        
-                    </form>
+                        <form method="POST" action="presupuestos.php">
+                            <div class="mb-3">
+                                <label for="descripcion-presupuesto" class="form-label">Descripción del Presupuesto</label>
+                                <input type="text" class="form-control" id="descripcion-presupuesto" name="descripcion" placeholder="Descripción" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="monto" class="form-label">Monto</label>
+                                <input type="number" class="form-control" name="monto" min="0" step="0.01" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="fecha_inicio" class="form-label">Fecha de Inicio</label>
+                                <input type="date" class="form-control" id="fecha_inicio" name="fecha_inicio" required>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary">Registrar Presupuesto</button>
+                            
+                        </form>
                 </div>
             </div>
         </main>
+        
+    </div>
+
+    <script src="../js/bootstrap.bundle.min.js"></script>
+    <script src="../js/scripts.js"></script>
+
+</body>
+</html>
+
+
+
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Presupuestos</title>
+    <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link href="../css/styles.css" rel="stylesheet" />
+    <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+    <script>
+        function validarFormulario() {
+            // Verifica si la quincena ya existe
+            <?php if ($quincenaExiste): ?>
+                document.getElementById("alerta-quincena").style.display = "block";
+                return false; // Impide el envío del formulario
+            <?php else: ?>
+                return true; // Permite el envío del formulario
+            <?php endif; ?>
+        }
+    </script>
+</head>
+<body>
+<nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
+    <!-- Navbar Brand-->
+    <a class="navbar-brand ps-3" href="index.php">Repaso de Cuentas</a>
+    <!-- Sidebar Toggle-->
+    <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i class="fas fa-bars"></i></button>
+    <!-- Navbar-->
+    <ul class="navbar-nav ms-auto">
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="fas fa-user fa-fw"></i> 
+                <?php if ($nombre != "") echo $nombre; ?> <!-- Muestra el nombre si está logueado -->
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                <li><a class="dropdown-item" href="cuenta.php">Cuenta</a></li>
+                <li><a class="dropdown-item" href="logout.php">Logout</a></li>
+            </ul>
+        </li>
+    </ul>
+</nav>
+
+<div id="layoutSidenav">
+    <div id="layoutSidenav_nav">
+        <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
+            <div class="sb-sidenav-menu">
+                <div class="nav">
+                    <a class="nav-link" href="index.php">
+                        <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                        Inicio
+                    </a>
+                    <a class="nav-link" href="inversiones.php">
+                        <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                        Inversiones
+                    </a>
+                    <a class="nav-link" href="adeudos.php">
+                        <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                        Adeudos
+                    </a>
+                    <a class="nav-link" href="ingresos.php">
+                        <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                        Ingresos
+                    </a>
+                    <a class="nav-link" href="deudas.php">
+                        <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                        Deudas
+                    </a>
+                    <a class="nav-link" href="presupuestos.php">
+                        <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                        Presupuestos
+                    </a>
+                    <a class="nav-link" href="analisis_financiero.php">
+                        <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                        Análisis Financiero
+                    </a>
+                    <a class="nav-link" href="exportar_datos.php">
+                        <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                        Exportar Datos Financieros
+                    </a>
+                    <a class="nav-link" href="informes_financieros.php">
+                        <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                        Generar Informes Financieros
+                    </a>
+                    <a class="nav-link" href="educacion_financiera.php">
+                        <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                        Educación Financiera
+                    </a>
+                </div>
+            </div>
+        </nav>
+    </div>
+
+    <div id="layoutSidenav_content">
+        <main>
+            <div class="container-fluid px-4">
+                <h1 class="my-4 text-center">Gestión de Presupuestos</h1>
+
+                <!-- Mostrar el presupuesto para la quincena vigente -->
+                <div class="alert alert-info" role="alert">
+                    <strong>Presupuesto para la quincena vigente:</strong> $<?php echo number_format($total_quincena, 2); ?>
+                </div>
+                <div class="alert alert-danger" role="alert">
+                    <strong>Presupuesto restante para la quincena vigente:</strong> $<?php echo number_format($total_quincena, 2); ?>
+                </div>
+                <!-- Tabla de Presupuestos -->
+                <div id="tabla-presupuestos" class="mb-4">
+                    <h2 class="h4 mb-3">Presupuestos Quincenales Actuales</h2>
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Descripción</th>
+                                <th>Monto</th>
+                                <th>Fecha de Inicio</th>
+                                <th>Fecha de Fin</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Carga los presupuestos de la base de datos -->
+                            <?php
+                            if ($result_presupuestos->num_rows > 0) {
+                                while ($row = $result_presupuestos->fetch_assoc()) {
+                                    echo "<tr>
+                                            <td>{$row['descripcion']}</td>
+                                            <td>\${$row['monto']}</td>
+                                            <td>{$row['fecha_inicio']}</td>
+                                            <td>{$row['fecha_fin']}</td>
+                                            <td>
+                                                <a href='editar_presupuesto.php?id={$row['id_presupuesto']}' class='btn btn-warning'><i class='fas fa-edit'></i> Editar</a>
+                                                <a href='eliminar_presupuesto.php?id={$row['id_presupuesto']}' class='btn btn-danger'><i class='fas fa-trash-alt'></i> Eliminar</a>
+                                            </td>
+                                          </tr>";
+                                }
+                            } else {
+                                echo "<tr><td colspan='5'>No hay presupuestos registrados.</td></tr>";
+                            }
+                            ?>
+                        </tbody>
+                    </table>
+                    <button type="button" class="btn btn-success" data-bs-toggle="collapse" data-bs-target="#registro-presupuesto">
+                        <i class="fas fa-plus-circle"></i> Crear Nuevo Presupuesto
+                    </button>
+                </div>
+
+                <!-- Registrar Presupuesto -->
+                <div id="registro-presupuesto" class="collapse mb-4">
+                <div class="alert alert-info" role="alert">
+                            <strong>Importante:</strong> Los presupuestos se dividen en quincenas. Si el presupuesto inicia entre el 1 y el 15, su fecha de finalización será el 15 del mismo mes. Si inicia entre el 16 y el 31, la fecha de finalización será 14 días después, iniciando el día 16.
+                        </div>
+
+                    <h2 class="h4 mb-3">Registrar Presupuesto</h2>
+                        <form method="POST" action="presupuestos.php">
+                            <div class="mb-3">
+                                <label for="descripcion-presupuesto" class="form-label">Descripción del Presupuesto</label>
+                                <input type="text" class="form-control" id="descripcion-presupuesto" name="descripcion" placeholder="Descripción" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="monto" class="form-label">Monto</label>
+                                <input type="number" class="form-control" name="monto" min="0" step="0.01" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="fecha_inicio" class="form-label">Fecha de Inicio</label>
+                                <input type="date" class="form-control" id="fecha_inicio" name="fecha_inicio" required>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary">Registrar Presupuesto</button>
+                            
+                        </form>
+                </div>
+            </div>
+        </main>
+        
     </div>
 
     <script src="../js/bootstrap.bundle.min.js"></script>

@@ -52,7 +52,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $sql_update = "UPDATE transaccion SET fecha = '$fecha', descripcion = '$descripcion', monto = '$monto', categoria = '$categoria' WHERE id_transaccion = '$id_transaccion'";
 
     if ($conn->query($sql_update) === TRUE) {
-        echo "<script>alert('Ingreso actualizado correctamente.'); window.location.href = 'ingresos.php';</script>";
+        echo "<script> window.location.href = 'ingresos.php';</script>";
     } else {
         echo "Error: " . $conn->error;
     }

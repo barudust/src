@@ -22,8 +22,7 @@ if (isset($_GET['id_transaccion'])) {
     if ($stmt->execute()) {
         // Si la consulta se ejecutó correctamente
         echo "<script>
-                alert('Ingreso eliminado correctamente.');
-                window.location.href = 'ingresos.php';
+               window.location.href = 'ingresos.php';
               </script>";
     } else {
         // Si hubo un error en la ejecución

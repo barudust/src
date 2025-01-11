@@ -62,7 +62,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $stmt_update = $conn->prepare("UPDATE presupuesto SET descripcion = ?, monto = ? WHERE id_presupuesto = ? AND id_usuario = ?");
             $stmt_update->bind_param("sdii", $descripcion, $monto, $id_presupuesto, $id_usuario);
             if ($stmt_update->execute()) {
-                echo "<script>alert('Presupuesto actualizado exitosamente'); window.location.href = 'presupuestos.php';</script>";
+                echo "<script> window.location.href = 'presupuestos.php';</script>";
             } else {
                 echo "<script>alert('Error al actualizar el presupuesto: " . $stmt_update->error . "');</script>";
             }

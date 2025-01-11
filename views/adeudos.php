@@ -21,7 +21,6 @@ if ($result->num_rows > 0) {
     $id_usuario = $row['id_usuario'];
     $nombre = $row['nombre'];
 } else {
-    echo "Error: Usuario no encontrado.";
     exit();
 }
 
@@ -33,11 +32,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['registrar_adeudo'])) 
     $fecha_vencimiento = $_POST['fecha_vencimiento'];
     $estado = $_POST['estado'];  // Agregar el estado
 
+    // Fecha actual
+    $fecha_actual = date('Y-m-d');
+
+    // Si la fecha de vencimiento es anterior a la fecha actual, por defecto el estado será "Caducado"
+    if (strtotime($fecha_vencimiento) < strtotime($fecha_actual)) {
+        $estado = 'Caducado';
+    }
+
     // Insertar el nuevo adeudo en la base de datos
     $sql_insert = "INSERT INTO adeudo (id_usuario, descripcion, categoria, monto, fecha_vencimiento, estado)
                    VALUES ('$id_usuario', '$descripcion', '$categoria', '$monto', '$fecha_vencimiento', '$estado')";
     if ($conn->query($sql_insert) === TRUE) {
-        echo "Nuevo adeudo registrado exitosamente.";
     } else {
         echo "Error: " . $sql_insert . "<br>" . $conn->error;
     }
@@ -48,6 +54,7 @@ $sql_adeudos = "SELECT * FROM adeudo WHERE id_usuario = '$id_usuario'";
 $result_adeudos = $conn->query($sql_adeudos);
 
 ?>
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -183,8 +190,9 @@ $result_adeudos = $conn->query($sql_adeudos);
                         </div>
                         <div class="mb-3">
                             <label for="monto" class="form-label">Monto del Adeudo</label>
-                            <input type="number" class="form-control" id="monto" name="monto" step="0.01" required>
+                            <input type="number" class="form-control" id="monto" name="monto" step="0.01" min="0" required>
                         </div>
+
                         <div class="mb-3">
                             <label for="fecha_vencimiento" class="form-label">Fecha de Vencimiento</label>
                             <input type="date" class="form-control" id="fecha_vencimiento" name="fecha_vencimiento" required>
@@ -194,6 +202,7 @@ $result_adeudos = $conn->query($sql_adeudos);
                             <select class="form-control" id="estado" name="estado" required>
                                 <option value="Pendiente">Pendiente</option>
                                 <option value="Pagado">Pagado</option>
+                                <option value="Caducado">Caducado</option>
                             </select>
                         </div>
                         <button type="submit" name="registrar_adeudo" class="btn btn-primary">Registrar Adeudo</button>

@@ -25,6 +25,19 @@ if ($result->num_rows > 0) {
     $nombre = "Usuario"; // En caso de error, muestra "Usuario"
 }
 
+
+$user_id = $_SESSION['user_id'];
+$query = "SELECT deudas, adeudos, inversiones, ingresos FROM usuarios WHERE id = $user_id";
+$result = $conn->query($query);
+
+if ($result->num_rows > 0) {
+    $data = $result->fetch_assoc();
+    header('Content-Type: application/json');
+    echo json_encode($data);
+} else {
+    echo json_encode(["error" => "No se encontraron datos para el usuario."]);
+}
+
 // Cerrar la conexión
 $conn->close();
 ?>
@@ -118,9 +131,14 @@ $conn->close();
 
                     <!-- Ver Análisis Financiero -->
                     <div id="ver-analisis-financiero" class="mb-4">
-                        <button onclick="obtenerAnalisisFinanciero()" class="btn btn-success">
-                            <i class="fas fa-chart-line"></i> Ver Análisis Financiero
-                        </button>
+                    <h1>Análisis Financiero</h1>
+                        <button onclick="financialAnalysisController.obtenerAnalisisFinanciero()">Ver Análisis Financiero</button>
+                        <div id="graficas" style="display:none;">
+                            <h2>Distribución Financiera</h2>
+                            <canvas id="graficoPastel" width="400" height="400"></canvas>
+                            <h2>Comparación Financiera</h2>
+                            <canvas id="graficoBarras" width="400" height="400"></canvas>
+                        </div>
                     </div>
 
                     <ul id="lista-movimientos" class="mt-4 list-group">

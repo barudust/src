@@ -25,18 +25,24 @@ if ($result->num_rows > 0) {
     $nombre = "Usuario"; // En caso de error, muestra "Usuario"
 }
 
+// Incluye los archivos que generan los arreglos
+require 'fetch_user_incomes.php';
+require 'fetch_user_debts.php';
+require 'fetch_user_adeudos.php';
+require 'fetch_user_investments.php';
 
-$user_id =  $row['id_usuario'];
-$query = "SELECT deudas, adeudos, inversiones, ingresos FROM usuarios WHERE id = $user_id";
-$result = $conn->query($query);
+// Extrae los datos totales de los arreglos
+$totalIngresos = array_sum(array_column($ingresos, 'monto'));
+$totalDeudas = array_sum(array_column($deudas, 'monto'));
+$totalAdeudos = array_sum(array_column($adeudos, 'monto'));
+$totalInversiones = array_sum(array_column($inversiones, 'monto'));
 
-if ($result->num_rows > 0) {
-    $data = $result->fetch_assoc();
-    header('Content-Type: application/json');
-    echo json_encode($data);
-} else {
-    echo json_encode(["error" => "No se encontraron datos para el usuario."]);
-}
+$data = [
+    'Ingresos' => $totalIngresos,
+    'Deudas' => $totalDeudas,
+    'Adeudos' => $totalAdeudos,
+    'Inversiones' => $totalInversiones,
+];
 
 // Cerrar la conexión
 $conn->close();
@@ -50,6 +56,7 @@ $conn->close();
     <link rel="stylesheet" href="../css/bootstrap.min.css">
     <link href="../css/styles.css" rel="stylesheet" />
     <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body class="sb-nav-fixed">
 <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
@@ -126,23 +133,25 @@ $conn->close();
 
             <div id="layoutSidenav_content">
             <main>
-                <div class="container-fluid px-4">
+            <div class="container-fluid px-4">
                     <h1 class="my-4 text-center">Análisis Financiero</h1>
 
                     <!-- Ver Análisis Financiero -->
                     <div id="ver-analisis-financiero" class="mb-4">
-                    <h1>Análisis Financiero</h1>
-                        <button onclick="financialAnalysisController.obtenerAnalisisFinanciero()">Ver Análisis Financiero</button>
-                        <div id="graficas" style="display:none;">
-                            <h2>Distribución Financiera</h2>
-                            <canvas id="graficoPastel" width="400" height="400"></canvas>
-                            <h2>Comparación Financiera</h2>
-                            <canvas id="graficoBarras" width="400" height="400"></canvas>
-                        </div>
+                        <button onclick="obtenerAnalisisFinanciero()" class="btn btn-success">
+                            <i class="fas fa-chart-line"></i> Ver Análisis Financiero
+                        </button>
                     </div>
 
                     <ul id="lista-movimientos" class="mt-4 list-group">
                         <!-- Aquí se mostrarán los movimientos o el análisis -->
+                        <h1>Visualización de Datos Financieros</h1>
+
+                        <h2>Distribución Financiera (Gráfica de Pastel)</h2>
+                        <canvas id="pieChart" width="400" height="400"></canvas>
+
+                        <h2>Comparación Financiera (Gráfica de Barras)</h2>
+                        <canvas id="barChart" width="400" height="400"></canvas>
                     </ul>
                 </div>
             </main>
@@ -158,6 +167,47 @@ $conn->close();
             </div>
         </div>    
     
+        <script>
+        // Datos desde PHP para JavaScript
+        function obtenerAnalisisFinanciero() {
+        const labels = <?php echo json_encode(array_keys($data)); ?>;
+        const values = <?php echo json_encode(array_values($data)); ?>;
+
+        // Gráfica de pastel
+        const ctxPie = document.getElementById('pieChart').getContext('2d');
+        new Chart(ctxPie, {
+            type: 'pie',
+            data: {
+                labels: labels,
+                datasets: [{
+                    data: values,
+                    backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0'],
+                }]
+            }
+        });
+
+        // Gráfica de barras
+        const ctxBar = document.getElementById('barChart').getContext('2d');
+        new Chart(ctxBar, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Montos en MXN',
+                    data: values,
+                    backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0'],
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    }
+    </script>
         <script src="../js/bootstrap.bundle.min.js"></script>
     <script src="../js/scripts.js"></script>
     <script src="../controllers/financialAnalysisController.js"></script> <!-- Lógica JS -->

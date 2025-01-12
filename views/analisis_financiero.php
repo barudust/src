@@ -14,7 +14,7 @@ $email = $_SESSION['email'];
 include('conexion.php'); // Suponiendo que la conexión está en este archivo
 
 // Consulta para obtener el nombre del usuario por el email
-$sql = "SELECT nombre FROM usuarios WHERE email = '$email'";
+$sql = "SELECT * FROM usuarios WHERE email = '$email'";
 $result = $conn->query($sql);
 
 // Verifica si se obtuvo el nombre correctamente
@@ -26,7 +26,7 @@ if ($result->num_rows > 0) {
 }
 
 
-$user_id = $_SESSION['user_id'];
+$user_id =  $row['id_usuario'];
 $query = "SELECT deudas, adeudos, inversiones, ingresos FROM usuarios WHERE id = $user_id";
 $result = $conn->query($query);
 

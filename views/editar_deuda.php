@@ -21,6 +21,19 @@ if ($id_deuda == '') {
     header("Location: deudas.php");
     exit();
 }
+// Consulta para obtener el nombre del usuario por el email
+$sql = "SELECT nombre FROM usuarios WHERE email = ?";
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("s", $email);
+$stmt->execute();
+$result = $stmt->get_result();
+
+$nombre = "Usuario";
+if ($result->num_rows > 0) {
+    $row = $result->fetch_assoc();
+    $nombre = $row['nombre'];
+}
+$stmt->close();
 
 // Consulta para obtener la deuda a editar
 $sql_deuda = "SELECT d.id_deuda, d.monto, d.entidad_acreedora, d.tasa_interes, d.descripcion, d.estatus
@@ -121,16 +134,17 @@ $conn->close();
 
                 <form action="editar_deuda.php?id=<?php echo $deuda['id_deuda']; ?>" method="POST">
                     <div class="mb-3">
-                        <label for="monto_deuda" class="form-label">Monto</label>
-                        <input type="number" class="form-control" name="monto_deuda" value="<?php echo $deuda['monto']; ?>" required>
-                    </div>
+                            <label for="monto_deuda" class="form-label">Monto</label>
+                            <input type="number" class="form-control" value="<?php echo $deuda['monto']; ?>" name="monto_deuda" min="0" step="0.01" required>
+                        </div>
+                    
                     <div class="mb-3">
                         <label for="entidad" class="form-label">Entidad Acreedora</label>
                         <input type="text" class="form-control" name="entidad_acreedora" value="<?php echo $deuda['entidad_acreedora']; ?>" required>
                     </div>
                     <div class="mb-3">
                         <label for="tasa_interes" class="form-label">Tasa de Interés (%)</label>
-                        <input type="number" class="form-control" name="tasa_interes" value="<?php echo $deuda['tasa_interes']; ?>" step="0.01" required>
+                        <input type="number" class="form-control" name="tasa_interes" value="<?php echo $deuda['tasa_interes']; ?>"  min="0" step="0.01" required>
                     </div>
                     <div class="mb-3">
                         <label for="descripcion" class="form-label">Descripción</label>

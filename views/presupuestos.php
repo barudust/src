@@ -103,7 +103,12 @@ if ($result_suma->num_rows > 0) {
     $row_suma = $result_suma->fetch_assoc();
     $total_quincena = $row_suma['total_quincena'];
 }
-
+$aux_total_quincena = $total_quincena 
+                     - $_SESSION['totalMontoQuincenaActualSiguiente'] 
+                     + $_SESSION['totalMontoQuincenaActual'] 
+                     + $_SESSION['totalDeudaQuincenaActualConInteres'] 
+                     + $_SESSION['totalIngresoQuincenaActual'] 
+                     - $_SESSION['totalAdeudoQuincenaActual'] ;
 // Cerrar la conexión
 $stmt->close();
 $stmt_presupuestos->close();
@@ -205,8 +210,26 @@ $conn->close();
                     <strong>Presupuesto para la quincena vigente:</strong> $<?php echo number_format($total_quincena, 2); ?>
                 </div>
                 <div class="alert alert-danger" role="alert">
-                    <strong>Presupuesto restante para la quincena vigente:</strong> $<?php echo number_format($total_quincena, 2); ?>
+                    <strong>Presupuesto restante para la quincena vigente:</strong> $<?php echo number_format($aux_total_quincena, 2); ?>
                 </div>
+                <div class="alert alert-warning" role="alert" style="max-width: 1200px; font-size: 0.9em;">
+                    <strong>Nota:</strong> 
+                    El presupuesto restante se basa en el presupuesto vigente más la suma o resta de los adeudos, ingresos, deudas e inversiones vigentes.
+                    <br> 
+                    <span style="background-color: #f0ad4e; font-weight: bold;">Lo que se suma:</span> 
+                    <br>
+                    Ingresos durante esta quincena, Inversiones que terminen esta quincena
+                    <br>
+                    <span style="background-color: #f0ad4e; font-weight: bold;">Lo que se resta:</span>  
+                    <br>
+                    Inversiones hechas en la quincena vigente, Deudas que finalicen en esta quincena, Adeudos que finalicen en esta quincena
+                    <br><br>
+                    <span style="color: red; font-size: 0.9em;">La suma ya incluye intereses o rendimientos según corresponda</span>
+                </div>
+
+
+
+                <div class="container mt-4">
                 <!-- Tabla de Presupuestos -->
                 <div id="tabla-presupuestos" class="mb-4">
                     <h2 class="h4 mb-3">Presupuestos Quincenales Actuales</h2>

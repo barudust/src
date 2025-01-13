@@ -13,8 +13,11 @@ $email = $_SESSION['email'];
 include('conexion.php');
 
 // Obtener el id del usuario basado en su email
-$sql = "SELECT id_usuario, nombre FROM usuarios WHERE email = '$email'";
-$result = $conn->query($sql);
+$sql = "SELECT id_usuario, nombre FROM usuarios WHERE email = ?";
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("s", $email);
+$stmt->execute();
+$result = $stmt->get_result();
 
 if ($result->num_rows > 0) {
     $row = $result->fetch_assoc();
@@ -30,8 +33,11 @@ if (isset($_GET['id'])) {
     $id_adeudo = $_GET['id'];
 
     // Consultar el adeudo específico
-    $sql_adeudo = "SELECT * FROM adeudo WHERE id_adeudo = '$id_adeudo' AND id_usuario = '$id_usuario'";
-    $result_adeudo = $conn->query($sql_adeudo);
+    $sql_adeudo = "SELECT * FROM adeudo WHERE id_adeudo = ? AND id_usuario = ?";
+    $stmt_adeudo = $conn->prepare($sql_adeudo);
+    $stmt_adeudo->bind_param("ii", $id_adeudo, $id_usuario);
+    $stmt_adeudo->execute();
+    $result_adeudo = $stmt_adeudo->get_result();
 
     if ($result_adeudo->num_rows > 0) {
         $row_adeudo = $result_adeudo->fetch_assoc();
@@ -46,23 +52,39 @@ if (isset($_GET['id'])) {
 
 // Si se ha enviado el formulario para editar el adeudo
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['editar_adeudo'])) {
-    $descripcion = $_POST['descripcion'];
-    $categoria = $_POST['categoria'];
-    $monto = $_POST['monto'];
-    $fecha_vencimiento = $_POST['fecha_vencimiento'];
-    $estado = $_POST['estado'];  // Agregar el estado
+    $descripcion = trim($_POST['descripcion'] ?? '');
+    $categoria = trim($_POST['categoria'] ?? '');
+    $monto = floatval($_POST['monto'] ?? 0);
+    $fecha_vencimiento = $_POST['fecha_vencimiento'] ?? null;
+    $estado = $_POST['estado'] ?? 'Pendiente';
+    $hoy = date('Y-m-d');
+
+    // Validar datos
+    if (empty($descripcion) || $monto <= 0 || empty($fecha_vencimiento)) {
+        echo "Error: Todos los campos son obligatorios y el monto debe ser mayor a 0.";
+        exit();
+    }
+
+    // Determinar el estado según la fecha de vencimiento y el estado enviado
+    if ($fecha_vencimiento < $hoy && $estado !== 'Pagado') {
+        $estado = 'Caducado';
+    }
 
     // Actualizar el adeudo en la base de datos
-    $sql_update = "UPDATE adeudo SET descripcion = '$descripcion', categoria = '$categoria', monto = '$monto', fecha_vencimiento = '$fecha_vencimiento', estado = '$estado' WHERE id_adeudo = '$id_adeudo'";
-    if ($conn->query($sql_update) === TRUE) {
+    $sql_update = "UPDATE adeudo SET descripcion = ?, categoria = ?, monto = ?, fecha_vencimiento = ?, estado = ? WHERE id_adeudo = ?";
+    $stmt_update = $conn->prepare($sql_update);
+    $stmt_update->bind_param("ssdssi", $descripcion, $categoria, $monto, $fecha_vencimiento, $estado, $id_adeudo);
+
+    if ($stmt_update->execute()) {
         // Redirigir a la página de adeudos después de la actualización
         header("Location: adeudos.php");
         exit();
     } else {
-        echo "Error: " . $sql_update . "<br>" . $conn->error;
+        echo "Error al actualizar el adeudo: " . $stmt_update->error;
     }
 }
 ?>
+
 
 <!DOCTYPE html>
 <html lang="es">

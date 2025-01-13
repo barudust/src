@@ -25,7 +25,7 @@ if ($result->num_rows > 0) {
     $nombre = "Usuario"; // En caso de error, muestra "Usuario"
 }
 
-// Verifica si se ha recibido un ID de transacción
+// Verifica si se ha recibido un ID de transacción 
 if (isset($_GET['id_transaccion'])) {
     $id_transaccion = $_GET['id_transaccion'];
 
@@ -158,9 +158,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <input type="text" class="form-control" id="descripcion-ingreso" name="descripcion" value="<?php echo $ingreso['descripcion']; ?>" required>
                 </div>
                 <div class="mb-3">
-                    <label for="monto-ingreso" class="form-label">Monto del Ingreso</label>
-                    <input type="number" class="form-control" id="monto-ingreso" name="monto" value="<?php echo $ingreso['monto']; ?>" required>
-                </div>
+                        <label for="monto-ingreso" class="form-label">Monto del Ingreso</label>
+                        <input type="number" class="form-control" id="monto-ingreso" name="monto" value="<?php echo $ingreso['monto']; ?>" placeholder="Monto del ingreso" required min="0.01" step="0.01">
+                    </div>
                 <div class="mb-3">
                     <label for="categoria-ingreso" class="form-label">Categoría del Ingreso</label>
                     <input type="text" class="form-control" id="categoria-ingreso" name="categoria" value="<?php echo $ingreso['categoria']; ?>" required>

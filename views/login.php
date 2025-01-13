@@ -104,6 +104,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                             <label for="inputPassword">Contraseña</label>
                                         </div>
                                         <div class="d-flex align-items-center justify-content-between mt-4 mb-0">
+                                            <a class="small" href="password.php">¿Olvidaste tu contraseña?</a>
                                             <button type="submit" class="btn btn-primary">Iniciar Sesión</button>
                                         </div>
                                     </form>

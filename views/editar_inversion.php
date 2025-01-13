@@ -149,7 +149,7 @@ $conn->close();
     <div id="layoutSidenav_content">
         <main>
             <div class="container-fluid px-4">
-                <h1 class="my-4 text-center">Modificar Inversión</h1>
+                <h1 class="my-4 text-center">Modificar Inversión</h1> 
 
                 <!-- Formulario de modificación -->
                 <div class="mb-4">
@@ -161,11 +161,13 @@ $conn->close();
                         </div>
                         <div class="mb-3">
                             <label for="monto" class="form-label">Monto</label>
-                            <input type="number" class="form-control" id="monto" name="monto" value="<?= $inversion['monto']; ?>" required>
+                            <input type="number" class="form-control" id="monto" name="monto"  value="<?= $inversion['monto']; ?>" min="0" step="0.01" required>
+                            <small class="text-muted">Debe ser un número positivo con máximo dos decimales.</small>
                         </div>
                         <div class="mb-3">
                             <label for="rendimiento" class="form-label">Rendimiento (%)</label>
-                            <input type="number" step="0.01" class="form-control" id="rendimiento" name="rendimiento" value="<?= $inversion['rendimiento']; ?>" required>
+                            <input type="number" class="form-control" id="rendimiento" name="rendimiento" value="<?= $inversion['rendimiento']; ?>"  min="0" step="0.01" required>
+                            <small class="text-muted">Debe ser un número positivo con máximo dos decimales.</small>
                         </div>
                         <button type="submit" class="btn btn-success">Modificar</button>
                     </form>

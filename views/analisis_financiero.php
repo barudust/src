@@ -14,6 +14,18 @@ $email = $_SESSION['email'];
 include('conexion.php'); // Suponiendo que la conexión está en este archivo
 
 // Consulta para obtener el nombre del usuario por el email
+$sql = "SELECT nombre FROM usuarios WHERE email = '$email'";
+$result = $conn->query($sql);
+
+// Verifica si se obtuvo el nombre correctamente
+if ($result->num_rows > 0) {
+    $row = $result->fetch_assoc();
+    $nombre = $row['nombre']; // Asume que el campo se llama 'nombre'
+} else {
+    $nombre = "Usuario"; // En caso de error, muestra "Usuario"
+}
+
+// Consulta para obtener el nombre del usuario por el email
 $sql = "SELECT * FROM usuarios WHERE email = '$email'";
 $result = $conn->query($sql);
 
@@ -25,11 +37,120 @@ if ($result->num_rows > 0) {
     $nombre = "Usuario"; // En caso de error, muestra "Usuario"
 }
 
-// Incluye los archivos que generan los arreglos
-require 'fetch_user_incomes.php';
-require 'fetch_user_debts.php';
-require 'fetch_user_adeudos.php';
-require 'fetch_user_investments.php';
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////INGRESOS
+    $queryUsuario = "SELECT id_usuario FROM usuarios WHERE email = ?";
+    $stmtUsuario = $conn->prepare($queryUsuario);
+    $stmtUsuario->bind_param("s", $email);
+    $stmtUsuario->execute();
+    $resultUsuario = $stmtUsuario->get_result();
+
+    if ($resultUsuario->num_rows > 0) {
+        $user = $resultUsuario->fetch_assoc();
+        $id_usuario = $user['id_usuario'];
+
+        // Consulta para obtener los ingresos del usuario
+        $queryIngresos = "SELECT fecha, descripcion, monto, categoria FROM transaccion WHERE id_usuario = ? AND tipo = 'Ingreso'";
+        $stmtIngresos = $conn->prepare($queryIngresos);
+        $stmtIngresos->bind_param("i", $id_usuario);
+        $stmtIngresos->execute();
+        $resultIngresos = $stmtIngresos->get_result();
+
+        // Array para almacenar los ingresos
+        $ingresos = [];
+
+        while ($row = $resultIngresos->fetch_assoc()) {
+            $ingresos[] = [
+                'fecha' => $row['fecha'],
+                'descripcion' => $row['descripcion'],
+                'monto' => $row['monto'],
+                'categoria' => $row['categoria']
+            ];
+        }
+
+        // Ahora el array $ingresos está listo para usarse en otro documento
+        // Por ejemplo, puedes guardarlo en la sesión para uso posterior
+        $_SESSION['ingresos'] = $ingresos;
+        
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////INVERSIONES
+        // Consulta para obtener los inversiones del usuario
+        $queryInversiones = "SELECT tipo, monto, rendimiento FROM inversion WHERE id_usuario = ?";
+        $stmtInversiones = $conn->prepare($queryInversiones);
+        $stmtInversiones->bind_param("i", $id_usuario);
+        $stmtInversiones->execute();
+        $resultInversiones = $stmtInversiones->get_result();
+
+        // Array para almacenar las inversiones
+        $inversiones = [];
+
+        while ($row = $resultInversiones->fetch_assoc()) {
+            $inversiones[] = [
+                'tipo' => $row['tipo'],
+                'monto' => $row['monto'],
+                'rendimiento' => $row['rendimiento']
+            ];
+        }
+
+        // Ahora el array $inversiones está listo para usarse en otro documento
+        // Por ejemplo, puedes guardarlo en la sesión para uso posterior
+        $_SESSION['inversiones'] = $inversiones;
+        
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////ADEUDOS
+        // Consulta para obtener los adeudos del usuario
+        $queryAdeudos = "SELECT fecha_vencimiento, descripcion, monto, categoria, estado FROM adeudo WHERE id_usuario = ?";
+        $stmtAdeudos = $conn->prepare($queryAdeudos);
+        $stmtAdeudos->bind_param("i", $id_usuario);
+        $stmtAdeudos->execute();
+        $resultAdeudos = $stmtAdeudos->get_result();
+
+        // Array para almacenar los adeudos
+        $adeudos = [];
+
+        while ($row = $resultAdeudos->fetch_assoc()) {
+            $adeudos[] = [
+                'fecha_vencimiento' => $row['fecha_vencimiento'],
+                'descripcion' => $row['descripcion'],
+                'monto' => $row['monto'],
+                'categoria' => $row['categoria'],
+                'estado' => $row['estado']
+            ];
+        }
+
+        // Ahora el array $adeudos está listo para usarse en otro documento
+        // Por ejemplo, puedes guardarlo en la sesión para uso posterior
+        $_SESSION['adeudos'] = $adeudos;
+        
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////DEUDAS
+        // Consulta para obtener las deudas del usuario
+        $queryDeudas = "SELECT entidad_acreedora, descripcion, monto, tasa_interes, estatus FROM deuda WHERE id_usuario = ?";
+        $stmtDeudas = $conn->prepare($queryDeudas);
+        $stmtDeudas->bind_param("i", $id_usuario);
+        $stmtDeudas->execute();
+        $resultDeudas = $stmtDeudas->get_result();
+
+        // Array para almacenar las deudas
+        $deudas = [];
+
+        while ($row = $resultDeudas->fetch_assoc()) {
+            $deudas[] = [
+                'entidad_acreedora' => $row['entidad_acreedora'],
+                'descripcion' => $row['descripcion'],
+                'monto' => $row['monto'],
+                'tasa_interes' => $row['tasa_interes'],
+                'estatus' => $row['estatus']
+            ];
+        }
+
+        // Ahora el array $deudas está listo para usarse en otro documento
+        // Por ejemplo, puedes guardarlo en la sesión para uso posterior
+        $_SESSION['deudas'] = $deudas;
+
+      //  echo "Ingresos obtenidos y almacenados en la sesión.";
+    } else {
+       // echo "Usuario no encontrado.";
+    }
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // Extrae los datos totales de los arreglos
 $totalIngresos = array_sum(array_column($ingresos, 'monto'));
@@ -37,12 +158,7 @@ $totalDeudas = array_sum(array_column($deudas, 'monto'));
 $totalAdeudos = array_sum(array_column($adeudos, 'monto'));
 $totalInversiones = array_sum(array_column($inversiones, 'monto'));
 
-$data = [
-    'Ingresos' => $totalIngresos,
-    'Deudas' => $totalDeudas,
-    'Adeudos' => $totalAdeudos,
-    'Inversiones' => $totalInversiones,
-];
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // Cerrar la conexión
 $conn->close();
@@ -133,7 +249,7 @@ $conn->close();
 
             <div id="layoutSidenav_content">
             <main>
-            <div class="container-fluid px-4">
+                <div class="container-fluid px-4">
                     <h1 class="my-4 text-center">Análisis Financiero</h1>
 
                     <!-- Ver Análisis Financiero -->
@@ -145,13 +261,13 @@ $conn->close();
 
                     <ul id="lista-movimientos" class="mt-4 list-group">
                         <!-- Aquí se mostrarán los movimientos o el análisis -->
-                        <h1>Visualización de Datos Financieros</h1>
+                        <h1>Visualización de Datos</h1>
 
-                        <h2>Distribución Financiera (Gráfica de Pastel)</h2>
-                        <canvas id="pieChart" width="400" height="400"></canvas>
+                        <h2>Gráfico de Barras</h2>
+                        <canvas id="barChart" width="400" height="200"></canvas>
 
-                        <h2>Comparación Financiera (Gráfica de Barras)</h2>
-                        <canvas id="barChart" width="400" height="400"></canvas>
+                        <h2>Gráfico de Pastel</h2>
+                        <canvas id="pieChart" width="400" height="200"></canvas>
                     </ul>
                 </div>
             </main>
@@ -166,47 +282,83 @@ $conn->close();
             </footer>
             </div>
         </div>    
-    
-        <script>
-        // Datos desde PHP para JavaScript
-        function obtenerAnalisisFinanciero() {
-        const labels = <?php echo json_encode(array_keys($data)); ?>;
-        const values = <?php echo json_encode(array_values($data)); ?>;
+    	
+    	<script>
+         // Datos para el gráfico de barras
+         const barData = {
+            labels: ['Ingresos', 'Adeudos', 'Deudas', 'Inversiones'],
+            datasets: [{
+                label: 'Montos Totales',
+                data: [
+                    <?php echo array_sum(array_column($ingresos, 'monto')); ?>,
+                    <?php echo array_sum(array_column($adeudos, 'monto')); ?>,
+                    <?php echo array_sum(array_column($deudas, 'monto')); ?>,
+                    <?php echo array_sum(array_column($inversiones, 'monto')); ?>
+                ],
+                backgroundColor: ['#4caf50', '#f44336', '#2196f3', '#ff9800']
+            }]
+        };
 
-        // Gráfica de pastel
-        const ctxPie = document.getElementById('pieChart').getContext('2d');
-        new Chart(ctxPie, {
-            type: 'pie',
-            data: {
-                labels: labels,
-                datasets: [{
-                    data: values,
-                    backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0'],
-                }]
-            }
-        });
-
-        // Gráfica de barras
-        const ctxBar = document.getElementById('barChart').getContext('2d');
-        new Chart(ctxBar, {
+        // Configuración del gráfico de barras
+        const barConfig = {
             type: 'bar',
-            data: {
-                labels: labels,
-                datasets: [{
-                    label: 'Montos en MXN',
-                    data: values,
-                    backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0'],
-                }]
-            },
+            data: barData,
             options: {
-                scales: {
-                    y: {
-                        beginAtZero: true
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    },
+                    title: {
+                        display: true,
+                        text: 'Comparación de Montos Totales'
                     }
                 }
             }
-        });
-    }
+        };
+
+        // Datos para el gráfico de pastel
+        const pieData = {
+            labels: ['Ingresos', 'Adeudos', 'Deudas', 'Inversiones'],
+            datasets: [{
+                data: [
+                    <?php echo array_sum(array_column($ingresos, 'monto')); ?>,
+                    <?php echo array_sum(array_column($adeudos, 'monto')); ?>,
+                    <?php echo array_sum(array_column($deudas, 'monto')); ?>,
+                    <?php echo array_sum(array_column($inversiones, 'monto')); ?>
+                ],
+                backgroundColor: ['#4caf50', '#f44336', '#2196f3', '#ff9800']
+            }]
+        };
+
+        // Configuración del gráfico de pastel
+        const pieConfig = {
+            type: 'pie',
+            data: pieData,
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    },
+                    title: {
+                        display: true,
+                        text: 'Distribución de Montos'
+                    }
+                }
+            }
+        };
+
+        // Renderiza los gráficos
+        const barChart = new Chart(
+            document.getElementById('barChart'),
+            barConfig
+        );
+
+        const pieChart = new Chart(
+            document.getElementById('pieChart'),
+            pieConfig
+        );
     </script>
         <script src="../js/bootstrap.bundle.min.js"></script>
     <script src="../js/scripts.js"></script>

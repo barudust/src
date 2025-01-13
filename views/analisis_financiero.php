@@ -173,6 +173,16 @@ $conn->close();
     <link href="../css/styles.css" rel="stylesheet" />
     <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const tablas = document.getElementById('lista-movimientos');
+            tablas.style.display = 'none';
+
+            document.getElementById('ver-analisis-financiero').addEventListener('click', function () {
+                tablas.style.display = tablas.style.display === 'none' ? 'block' : 'none';
+            });
+        });
+    </script>
 </head>
 <body class="sb-nav-fixed">
 <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
